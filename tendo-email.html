@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Tendo Marketplace] New Case VH-12345 - Gmail</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Google Sans', Roboto, Arial, sans-serif; background: #f6f8fc; color: #202124; font-size: 14px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── TOP BAR ── */
+    .gmail-topbar {
+      height: 64px;
+      background: #f6f8fc;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .gmail-topbar .menu-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; color: #444; font-size: 18px; }
+    .gmail-topbar .menu-icon:hover { background: #e8eaed; }
+    .gmail-logo { display: flex; align-items: center; gap: 4px; margin-right: 8px; }
+    .gmail-logo .m-letter { font-size: 22px; font-weight: 400; }
+    .gmail-logo .m-letter.r { color: #EA4335; }
+    .gmail-logo .m-letter.b { color: #4285F4; }
+    .gmail-logo .m-letter.y { color: #FBBC05; }
+    .gmail-logo .m-letter.g { color: #34A853; }
+    .gmail-logo-text { font-size: 22px; font-weight: 400; color: #5f6368; letter-spacing: -0.5px; }
+    .gmail-search {
+      flex: 1;
+      max-width: 720px;
+      background: #eaf1fb;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      height: 46px;
+      gap: 12px;
+    }
+    .gmail-search input { flex: 1; border: none; background: transparent; font-size: 16px; color: #202124; outline: none; }
+    .gmail-search svg { color: #444; }
+    .gmail-search .search-arrow { margin-left: auto; color: #444; cursor: pointer; }
+    .topbar-icons { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+    .topbar-icon-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #444; border: none; background: none; font-size: 18px; }
+    .topbar-icon-btn:hover { background: #e8eaed; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: #1a73e8; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 500; cursor: pointer; }
+
+    /* ── MAIN LAYOUT ── */
+    .gmail-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── SIDEBAR ── */
+    .gmail-sidebar { width: 256px; padding: 8px 0; flex-shrink: 0; overflow-y: auto; }
+    .compose-btn {
+      margin: 4px 12px 16px;
+      background: #c2e7ff;
+      border: none;
+      border-radius: 16px;
+      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #001d35;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: calc(100% - 24px);
+    }
+    .compose-btn:hover { background: #aecbfa; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .compose-plus { font-size: 20px; font-weight: 300; }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 4px 16px 4px 24px;
+      height: 32px;
+      border-radius: 0 16px 16px 0;
+      cursor: pointer;
+      color: #202124;
+      font-size: 14px;
+      margin-right: 16px;
+    }
+    .sidebar-item:hover { background: #e8eaed; }
+    .sidebar-item.active { background: #d3e3fd; font-weight: 600; }
+    .sidebar-item .icon { width: 20px; text-align: center; font-size: 16px; flex-shrink: 0; }
+    .sidebar-item .label { flex: 1; }
+    .sidebar-item .count { font-size: 12px; color: #202124; }
+    .sidebar-section { padding: 8px 24px 4px; font-size: 11px; font-weight: 500; color: #444746; text-transform: uppercase; letter-spacing: 0.5px; }
+    .sidebar-label-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── EMAIL PANEL ── */
+    .gmail-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: white; margin: 8px 16px 8px 0; border-radius: 16px; }
+    .email-toolbar {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .toolbar-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: none; color: #444; font-size: 16px; }
+    .toolbar-btn:hover { background: #f1f3f4; }
+    .toolbar-separator { width: 1px; height: 20px; background: #e0e0e0; margin: 0 8px; }
+    .toolbar-pagination { margin-left: auto; font-size: 12px; color: #444; display: flex; align-items: center; gap: 8px; }
+
+    /* ── EMAIL CONTENT ── */
+    .email-content { flex: 1; overflow-y: auto; padding: 24px 32px; }
+    .email-subject-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .email-subject { font-size: 22px; font-weight: 400; color: #202124; flex: 1; }
+    .inbox-chip {
+      background: #e8eaed;
+      color: #444746;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .inbox-chip .chip-x { cursor: pointer; color: #444; }
+    .email-meta-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .sender-avatar { width: 40px; height: 40px; border-radius: 50%; background: #e8eaed; display: flex; align-items: center; justify-content: center; color: #444; font-size: 18px; flex-shrink: 0; }
+    .sender-info { flex: 1; }
+    .sender-name { font-size: 14px; font-weight: 500; color: #202124; }
+    .sender-email { font-size: 12px; color: #444; }
+    .email-timestamp { font-size: 12px; color: #444; display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-top: 2px; }
+    .email-action-icons { display: flex; gap: 4px; }
+    .email-action-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: none; color: #444; font-size: 14px; }
+    .email-action-btn:hover { background: #f1f3f4; }
+
+    /* Email body card */
+    .email-body-card {
+      max-width: 600px;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      margin-bottom: 32px;
+    }
+    .card-header { padding: 28px 40px 20px; text-align: center; background: white; }
+    .card-logo { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; }
+    .mdsave-logo {
+      background: #0471EC;
+      color: white;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 4px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border-radius: 2px;
+    }
+    .mdsave-logo .md { font-size: 13px; font-weight: 900; }
+    .mdsave-logo .save { font-size: 9px; }
+    .card-logo-plus { font-size: 14px; color: #444; font-weight: 300; }
+    .care-connect-logo {
+      background: #0471EC;
+      color: white;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 4px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 2px;
+      line-height: 1.2;
+    }
+    .care-connect-logo .care { font-size: 11px; font-weight: 900; }
+    .card-tendo-text { font-size: 14px; color: #E60B6F; font-weight: 700; display: flex; align-items: center; gap: 4px; justify-content: center; }
+    .card-tendo-text .y-logo { color: #E60B6F; font-weight: 900; font-size: 16px; }
+    .card-tendo-text .marketplace { font-weight: 900; }
+
+    .card-notification {
+      padding: 24px 40px;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+    }
+    .notif-icon-row { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+    .notif-bell {
+      width: 44px;
+      height: 44px;
+      background: #E6F1FE;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .notif-title { font-size: 20px; font-weight: 700; color: #202124; }
+    .notif-subtitle { font-size: 13px; color: #444; margin-top: 2px; }
+    .card-divider { border: none; border-top: 1px solid #e0e0e0; margin: 20px 0; }
+    .card-body-text { font-size: 15px; color: #202124; line-height: 24px; }
+    .card-body-text p { margin-bottom: 12px; }
+    .card-body-text p:last-child { margin-bottom: 0; }
+    .view-case-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: #0471EC;
+      color: white;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 13px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .view-case-btn:hover { background: #0360c8; }
+    .card-footer {
+      background: #f8f9fa;
+      padding: 16px 40px;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+    }
+    .card-footer p { font-size: 12px; color: #666; line-height: 18px; }
+
+    .email-reply-bar {
+      padding: 16px 32px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .reply-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #dadce0;
+      background: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #444;
+      cursor: pointer;
+    }
+    .reply-btn:hover { background: #f1f3f4; }
+
+    /* ── EMAIL LIST PANEL ── */
+    .email-list-panel {
+      width: 360px;
+      flex-shrink: 0;
+      border-right: 1px solid #e0e0e0;
+      overflow-y: auto;
+      background: #f6f8fc;
+      display: flex;
+      flex-direction: column;
+    }
+    .email-list-toolbar {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 4px;
+      border-bottom: 1px solid #e0e0e0;
+      flex-shrink: 0;
+      height: 53px;
+    }
+    .email-row {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 16px;
+      cursor: pointer;
+      gap: 10px;
+      border-bottom: 1px solid #e8eaed;
+      background: white;
+    }
+    .email-row:hover { background: #f1f3f4; }
+    .email-row.selected { background: #d3e3fd; }
+    .email-row.unread { background: white; }
+    .email-row.unread .er-sender,
+    .email-row.unread .er-subject { font-weight: 700; }
+    .er-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; color: white;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .er-body { flex: 1; min-width: 0; }
+    .er-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+    .er-sender { font-size: 13px; color: #202124; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .er-time { font-size: 11px; color: #5f6368; flex-shrink: 0; }
+    .er-subject { font-size: 13px; color: #202124; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .er-snippet { font-size: 12px; color: #5f6368; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .unread-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #0471EC; flex-shrink: 0; margin-top: 6px;
+    }
+
+    /* ── EMAIL DETAIL ── */
+    .email-detail { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+    .email-detail.active { display: flex; }
+  </style>
+</head>
+<body>
+
+<!-- Gmail Top Bar -->
+<div class="gmail-topbar">
+  <button class="topbar-icon-btn menu-icon">☰</button>
+  <div class="gmail-logo">
+    <svg width="36" height="26" viewBox="0 0 36 26" fill="none" style="margin-right:4px">
+      <path d="M2 4l16 11L34 4" stroke="none"/>
+      <rect x="0" y="2" width="36" height="22" rx="2" fill="#fff" stroke="#dadce0"/>
+      <path d="M0 4l18 12L36 4" stroke="none" fill="none"/>
+      <path fill-rule="evenodd" d="M2 2h32l-16 11L2 2z" fill="#EA4335"/>
+      <rect x="0" y="2" width="4" height="22" rx="0" fill="#C5221F"/>
+      <rect x="32" y="2" width="4" height="22" rx="0" fill="#C5221F"/>
+      <path d="M0 4l18 12L36 4v18H0V4z" fill="#EA4335"/>
+      <path d="M0 4l18 12L36 4" fill="none" stroke="white" stroke-width="2"/>
+    </svg>
+    <span class="gmail-logo-text">Gmail</span>
+  </div>
+  <div class="gmail-search">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="#444" stroke-width="1.5"/><path d="M14 14l4 4" stroke="#444" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <input type="text" placeholder="Search mail" value="">
+    <svg class="search-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="#444" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="topbar-icons">
+    <button class="topbar-icon-btn">?</button>
+    <button class="topbar-icon-btn">⚙</button>
+    <button class="topbar-icon-btn">⋮⋮⋮</button>
+    <div class="avatar">E</div>
+  </div>
+</div>
+
+<div class="gmail-body">
+
+  <!-- Sidebar -->
+  <div class="gmail-sidebar">
+    <button class="compose-btn">
+      <span class="compose-plus">✏</span>
+      Compose
+    </button>
+
+    <div class="sidebar-item active">
+      <span class="icon">📥</span>
+      <span class="label">Inbox</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="icon">⭐</span>
+      <span class="label">Starred</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="icon">🕐</span>
+      <span class="label">Snoozed</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="icon">▶</span>
+      <span class="label">Important</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="icon">➤</span>
+      <span class="label">Sent</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="icon">🗑</span>
+      <span class="label">Trash</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="icon">📄</span>
+      <span class="label">Drafts</span>
+      <span class="count">14</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="icon">🏷</span>
+      <span class="label">Categories</span>
+    </div>
+
+    <div class="sidebar-section">Labels</div>
+    <div class="sidebar-item">
+      <span class="sidebar-label-dot" style="background:#0F9D58"></span>
+      <span class="label">Team</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="sidebar-label-dot" style="background:#F4B400"></span>
+      <span class="label">News</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="sidebar-label-dot" style="background:#4285F4"></span>
+      <span class="label">Work</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="sidebar-label-dot" style="background:#EA4335"></span>
+      <span class="label">Personal</span>
+    </div>
+    <div class="sidebar-item">
+      <span class="icon" style="font-size:12px">▼</span>
+      <span class="label">More</span>
+    </div>
+  </div>
+
+  <!-- Email List Panel -->
+  <div class="email-list-panel">
+    <div class="email-list-toolbar">
+      <button class="toolbar-btn">☐</button>
+      <button class="toolbar-btn">↻</button>
+      <button class="toolbar-btn">⋮</button>
+      <span style="margin-left:auto;font-size:12px;color:#5f6368;">1–2 of 2</span>
+    </div>
+
+    <!-- Row 1: New activity (unread) -->
+    <div class="email-row unread" id="row-activity" onclick="selectEmail('activity')">
+      <div class="unread-dot"></div>
+      <div class="er-avatar" style="background:#E60B6F;">T</div>
+      <div class="er-body">
+        <div class="er-top">
+          <span class="er-sender">Tendo Marketplace</span>
+          <span class="er-time">Apr 28</span>
+        </div>
+        <div class="er-subject">New case activity — Sarah Johnson</div>
+        <div class="er-snippet">Abigail Brown from Valenz Health has replied to Case #VH-12345</div>
+      </div>
+    </div>
+
+    <!-- Row 2: Original new case email (read) -->
+    <div class="email-row" id="row-original" onclick="selectEmail('original')">
+      <div style="width:8px;flex-shrink:0;"></div>
+      <div class="er-avatar" style="background:#0471EC;">C</div>
+      <div class="er-body">
+        <div class="er-top">
+          <span class="er-sender">Care Connect</span>
+          <span class="er-time">Apr 24</span>
+        </div>
+        <div class="er-subject">[Tendo Marketplace] New Case VH-12345</div>
+        <div class="er-snippet">Hi Emily, A new case has been opened for patient Sarah Johnson...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Email Panel -->
+  <div class="gmail-main">
+    <!-- Toolbar -->
+    <div class="email-toolbar">
+      <button class="toolbar-btn" title="Back">←</button>
+      <button class="toolbar-btn" title="Archive">🗄</button>
+      <button class="toolbar-btn" title="Spam">⚠</button>
+      <button class="toolbar-btn" title="Delete">🗑</button>
+      <button class="toolbar-btn" title="Mark unread">✉</button>
+      <button class="toolbar-btn" title="Snooze">🕐</button>
+      <div class="toolbar-separator"></div>
+      <button class="toolbar-btn" title="Move">📁</button>
+      <button class="toolbar-btn" title="Labels">🏷</button>
+      <button class="toolbar-btn" title="More">⋮</button>
+      <div class="toolbar-pagination">
+        <span>1-16 of 16</span>
+        <button class="toolbar-btn" style="width:28px;height:28px">‹</button>
+        <button class="toolbar-btn" style="width:28px;height:28px">›</button>
+        <button class="toolbar-btn" style="width:28px;height:28px">⊡</button>
+      </div>
+    </div>
+
+    <!-- Detail: Original "New Case" email -->
+    <div class="email-detail" id="detail-original">
+    <div class="email-content">
+      <!-- Subject -->
+      <div class="email-subject-row">
+        <h1 class="email-subject">[Tendo Marketplace] New Case VH-12345</h1>
+        <div class="inbox-chip">
+          Inbox <span class="chip-x">×</span>
+        </div>
+        <button class="toolbar-btn">🖨</button>
+        <button class="toolbar-btn">⤢</button>
+      </div>
+
+      <!-- Sender -->
+      <div class="email-meta-row">
+        <div class="sender-avatar">C</div>
+        <div class="sender-info">
+          <div class="sender-name">Care Connect <span style="font-weight:400;color:#444">&lt;info@mdsave.com&gt;</span></div>
+          <div class="sender-email">to me ▾</div>
+        </div>
+        <div class="email-timestamp">
+          April 24, 2026, 10:15 AM
+          <div class="email-action-icons">
+            <button class="email-action-btn">☆</button>
+            <button class="email-action-btn">↩</button>
+            <button class="email-action-btn">⋮</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email Body Card -->
+      <div class="email-body-card">
+        <div class="card-header">
+          <div class="card-logo">
+            <div class="mdsave-logo">
+              <span class="md">MD</span><span class="save">save</span>
+            </div>
+            <span class="card-logo-plus">+</span>
+            <div class="care-connect-logo">
+              <span class="care">CARE</span>
+              <span>connect</span>
+            </div>
+          </div>
+          <div class="card-tendo-text">
+            <span class="y-logo">Ɣ</span>
+            <span style="font-weight:400">tendo</span>
+            <span class="marketplace">Marketplace</span>
+          </div>
+        </div>
+
+        <div class="card-notification">
+          <div class="notif-icon-row">
+            <div class="notif-bell">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2a6 6 0 00-6 6v4l-2 3h16l-2-3V8a6 6 0 00-6-6z" stroke="#0471EC" stroke-width="1.8" fill="none"/>
+                <path d="M10 18a2 2 0 004 0" stroke="#0471EC" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <div class="notif-title">New Case #VH-12345</div>
+              <div class="notif-subtitle">April 24, 2026 at 10:15 AM</div>
+            </div>
+          </div>
+
+          <hr class="card-divider">
+
+          <div class="card-body-text">
+            <p>Hi Emily,</p>
+            <p>There is new activity on <strong>Case #VH-12345</strong> for patient <strong>Sarah Johnson</strong>.</p>
+            <p>Please review the case activity and respond as needed.</p>
+            <a href="tendo-cases.html" class="view-case-btn">View Case</a>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <p>You received this email because you are assigned to Case #VH-12345</p>
+          <p>© 2026 Tendo, Inc. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reply Bar -->
+    <div class="email-reply-bar">
+      <button class="reply-btn">← Reply</button>
+      <button class="reply-btn">→ Forward</button>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
