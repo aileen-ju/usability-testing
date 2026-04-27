@@ -419,10 +419,10 @@
     <!-- Row 2: Original new case email (read) -->
     <div class="email-row" id="row-original" onclick="selectEmail('original')">
       <div style="width:8px;flex-shrink:0;"></div>
-      <div class="er-avatar" style="background:#0471EC;">C</div>
+      <div class="er-avatar" style="background:#E60B6F;">T</div>
       <div class="er-body">
         <div class="er-top">
-          <span class="er-sender">Care Connect</span>
+          <span class="er-sender">Tendo Marketplace</span>
           <span class="er-time">Apr 24</span>
         </div>
         <div class="er-subject">[Tendo Marketplace] New Case VH-12345</div>
@@ -468,9 +468,9 @@
 
       <!-- Sender -->
       <div class="email-meta-row">
-        <div class="sender-avatar">C</div>
+        <div class="sender-avatar" style="background:#E60B6F;color:white;font-size:14px;font-weight:700;">T</div>
         <div class="sender-info">
-          <div class="sender-name">Care Connect <span style="font-weight:400;color:#444">&lt;info@mdsave.com&gt;</span></div>
+          <div class="sender-name">Tendo Marketplace <span style="font-weight:400;color:#444">&lt;info@mdsave.com&gt;</span></div>
           <div class="sender-email">to me ▾</div>
         </div>
         <div class="email-timestamp">
@@ -523,7 +523,7 @@
             <p>Hi Emily,</p>
             <p>There is new activity on <strong>Case #VH-12345</strong> for patient <strong>Sarah Johnson</strong>.</p>
             <p>Please review the case activity and respond as needed.</p>
-            <a href="tendo-cases.html" class="view-case-btn">View Case</a>
+            <a href="tendo-case-thread-sarah.html" class="view-case-btn">View Case</a>
           </div>
         </div>
 
@@ -534,13 +534,112 @@
       </div>
     </div>
 
-    <!-- Reply Bar -->
     <div class="email-reply-bar">
       <button class="reply-btn">← Reply</button>
       <button class="reply-btn">→ Forward</button>
     </div>
-  </div>
+    </div><!-- end detail-original -->
+
+    <!-- Detail: Activity notification email -->
+    <div class="email-detail" id="detail-activity">
+      <div class="email-content">
+        <div class="email-subject-row">
+          <h1 class="email-subject">[Tendo Marketplace] New case activity — VH-12345</h1>
+          <div class="inbox-chip">Inbox <span class="chip-x">×</span></div>
+          <button class="toolbar-btn">🖨</button>
+          <button class="toolbar-btn">⤢</button>
+        </div>
+
+        <div class="email-meta-row">
+          <div class="sender-avatar" style="background:#E60B6F;color:white;font-size:14px;font-weight:700;">T</div>
+          <div class="sender-info">
+            <div class="sender-name">Tendo Marketplace <span style="font-weight:400;color:#444">&lt;info@mdsave.com&gt;</span></div>
+            <div class="sender-email">to me ▾</div>
+          </div>
+          <div class="email-timestamp">
+            April 28, 2026, 9:50 AM
+            <div class="email-action-icons">
+              <button class="email-action-btn">☆</button>
+              <button class="email-action-btn">↩</button>
+              <button class="email-action-btn">⋮</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="email-body-card">
+          <div class="card-header">
+            <div class="card-logo">
+              <div class="mdsave-logo"><span class="md">MD</span><span class="save">save</span></div>
+              <span class="card-logo-plus">+</span>
+              <div class="care-connect-logo"><span class="care">CARE</span><span>connect</span></div>
+            </div>
+            <div class="card-tendo-text">
+              <span class="y-logo">Ɣ</span>
+              <span style="font-weight:400">tendo</span>
+              <span class="marketplace">Marketplace</span>
+            </div>
+          </div>
+
+          <div class="card-notification">
+            <div class="notif-icon-row">
+              <div class="notif-bell">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2a6 6 0 00-6 6v4l-2 3h16l-2-3V8a6 6 0 00-6-6z" stroke="#0471EC" stroke-width="1.8" fill="none"/>
+                  <path d="M10 18a2 2 0 004 0" stroke="#0471EC" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="notif-title">New Case Activity</div>
+                <div class="notif-subtitle">April 28, 2026 at 9:50 AM</div>
+              </div>
+            </div>
+
+            <hr class="card-divider">
+
+            <div class="card-body-text">
+              <p>Hi Emily,</p>
+              <p><strong>Abigail Brown</strong> from Valenz Health has replied to <strong>Case #VH-12345</strong> for patient <strong>Sarah Johnson</strong>.</p>
+              <p>Please review the new case activity and respond as needed.</p>
+              <a href="tendo-case-thread-sarah.html" class="view-case-btn">View Case</a>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <p>You received this email because you are assigned to Case #VH-12345</p>
+            <p>© 2026 Tendo, Inc. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="email-reply-bar">
+        <button class="reply-btn">← Reply</button>
+        <button class="reply-btn">→ Forward</button>
+      </div>
+    </div><!-- end detail-activity -->
+
+  </div><!-- end gmail-main -->
 
 </div>
+<script>
+  function selectEmail(which) {
+    // Update list rows
+    document.getElementById('row-activity').classList.remove('selected', 'unread');
+    document.getElementById('row-original').classList.remove('selected');
+    document.getElementById('row-' + which).classList.add('selected');
+
+    // Update detail panels
+    document.querySelectorAll('.email-detail').forEach(d => d.classList.remove('active'));
+    document.getElementById('detail-' + which).classList.add('active');
+
+    // Update subject in toolbar area (optional visual feedback)
+  }
+
+  // On load: show activity email if arriving from the case thread
+  if (localStorage.getItem('sarahCasePhase') === '1') {
+    selectEmail('activity');
+  } else {
+    selectEmail('original');
+  }
+</script>
 </body>
 </html>
