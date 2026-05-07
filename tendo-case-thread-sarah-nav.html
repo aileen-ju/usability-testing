@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sarah Johnson — Case VH-12345 | CareConnect</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      font-family: Avenir, 'Nunito', system-ui, sans-serif;
+      background: #f0f0f0;
+      color: #3A3A3A;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── CARECONNECT NAV (fixed height, never scrolls) ── */
+    .nav-wrapper { background: white; box-shadow: 1px 5px 15px rgba(0,0,0,0.05); flex-shrink: 0; }
+    .nav-top { background: #F3F5F6; height: 52px; display: flex; align-items: center; padding: 0 32px; }
+    .nav-top-inner { max-width: 1440px; width: 100%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .nav-employer-network { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #40403E; }
+    .nav-employer-network span { color: #767674; }
+    .nav-employer-network a { color: #0471EC; text-decoration: none; }
+    .nav-contact { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 500; color: #40403E; text-decoration: none; }
+    .nav-main { height: 80px; display: flex; align-items: center; padding: 0 32px; background: white; }
+    .nav-main-inner { max-width: 1440px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo-group { display: flex; align-items: center; gap: 32px; }
+    .tendo-logo { display: flex; align-items: center; gap: 0; height: 48px; text-decoration: none; flex-shrink: 0; }
+    .tendo-logo-care { background: #0471EC; color: white; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 48px; height: 48px; line-height: 1.2; padding: 6px; }
+    .tendo-logo-care span:first-child { font-size: 13px; font-weight: 900; }
+    .tendo-logo-marketplace { display: flex; flex-direction: column; justify-content: center; padding-left: 8px; height: 48px; }
+    .tendo-logo-marketplace .a-tendo { font-size: 8px; color: #767674; letter-spacing: 0.5px; text-transform: uppercase; }
+    .tendo-logo-marketplace .mktplace { font-size: 13px; font-weight: 700; color: #E60B6F; letter-spacing: 1px; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: #40403E; text-decoration: none; white-space: nowrap; }
+    .nav-links a:hover { color: #0471EC; }
+    .nav-links a.active { color: #0471EC; font-weight: 700; }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .nav-avatar { width: 40px; height: 40px; border-radius: 50%; background: #D9D9D9; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #40403E; }
+    .nav-icon { cursor: pointer; color: #40403E; display: flex; align-items: center; }
+    .nav-icon svg { width: 20px; height: 20px; }
+
+    /* ── PAGE SHELL ── */
+    .page-shell { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+
+    .chat-panel-header {
+      flex-shrink: 0; display: flex; align-items: center; gap: 10px;
+      padding: 12px 20px; border-bottom: 1px solid #e0e0e0; background: white;
+    }
+    .chat-panel-header .back-link { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #0471EC; text-decoration: none; white-space: nowrap; }
+    .chat-panel-header .back-link:hover { text-decoration: underline; }
+    .chat-panel-header .divider-dot { color: #ccc; font-size: 16px; line-height: 1; }
+    .chat-panel-header .panel-name { font-size: 15px; font-weight: 700; color: #202124; }
+
+    /* ── THREAD AREA ── */
+    .thread-wrap { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+    .thread-layout { max-width: 1280px; width: 100%; margin: 0 auto; padding: 16px 32px; display: flex; gap: 0; min-height: 0; flex: 1; overflow: hidden; }
+
+    /* Left sidebar */
+    .case-sidebar { width: 280px; flex-shrink: 0; background: white; border: 1px solid #e0e0e0; border-radius: 4px 0 0 4px; padding: 24px 20px; overflow-y: auto; }
+    .sidebar-heading { font-size: 15px; font-weight: 700; color: #202124; margin-bottom: 16px; }
+    .detail-row { margin-bottom: 14px; }
+    .detail-label { font-size: 12px; color: #767674; margin-bottom: 2px; }
+    .detail-value { font-size: 14px; color: #3A3A3A; line-height: 20px; }
+    .accordion-header {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; padding: 8px 0; margin-bottom: 4px;
+      border-top: 1px solid #e0e0e0; user-select: none;
+    }
+    .accordion-header:first-child { border-top: none; }
+    .accordion-title { font-size: 13px; font-weight: 600; color: #40403E; }
+    .accordion-chevron { transition: transform 0.2s; flex-shrink: 0; }
+    .accordion-chevron.collapsed { transform: rotate(-90deg); }
+    .accordion-body { margin-bottom: 4px; }
+
+    /* Editable status badge */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 500; padding: 3px 10px;
+      border-radius: 4px; white-space: nowrap; cursor: pointer;
+    }
+    .status-badge:hover { filter: brightness(0.95); }
+    .status-in_progress { border: 1.5px solid #0471EC; color: #0471EC; background: #eff6ff; }
+    .status-pending_response { border: 1.5px solid #F59E0B; color: #B45309; background: #fffbeb; }
+    .status-provider_complete { border: 1.5px solid #22C55E; color: #166534; background: #dcfce7; }
+    .status-resolved { border: 1.5px solid #9ca3af; color: #6b7280; background: #f3f4f6; }
+    /* Status dropdown */
+    .status-dropdown-wrap { position: relative; display: inline-block; }
+    .status-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0;
+      background: white; border: 1px solid #e0e0e0;
+      border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      z-index: 50; min-width: 190px; padding: 6px 0;
+    }
+    .status-dropdown-section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
+      color: #999; text-transform: uppercase;
+      padding: 8px 14px 4px; pointer-events: none;
+    }
+    .status-dropdown-item {
+      padding: 9px 14px; font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; gap: 9px; color: #3A3A3A;
+    }
+    .status-dropdown-item:hover { background: #f5f5f5; }
+    .status-dropdown-item.active { font-weight: 700; }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .status-dropdown-divider { border: none; border-top: 1px solid #f0f0f0; margin: 4px 0; }
+    /* Assigned To */
+    .assign-dropdown-wrap { position: relative; }
+    .assigned-row {
+      display: flex; align-items: center; gap: 10px; margin-top: 4px;
+      cursor: pointer; border-radius: 6px; padding: 5px 6px; margin-left: -6px;
+      transition: background 0.15s;
+    }
+    .assigned-row:hover { background: #f5f5f5; }
+    .assigned-avatar {
+      width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #ccc;
+      display: flex; align-items: center; justify-content: center;
+      color: #999; flex-shrink: 0; font-size: 11px; font-weight: 700;
+    }
+    .assigned-chevron { color: #aaa; margin-left: auto; flex-shrink: 0; }
+    .assign-dropdown {
+      position: absolute; top: calc(100% + 4px); left: -6px;
+      background: white; border: 1px solid #e0e0e0;
+      border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+      z-index: 50; width: 230px; padding: 8px 0;
+    }
+    .assign-dropdown-item {
+      padding: 9px 14px; cursor: pointer;
+      display: flex; align-items: center; gap: 11px;
+    }
+    .assign-dropdown-item:hover { background: #f5f5f5; }
+    .assign-dropdown-item.active { background: #eff6ff; }
+    .assign-item-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0; color: white;
+    }
+    .assign-item-name { font-size: 13px; font-weight: 500; color: #202124; line-height: 17px; }
+    .assign-item-you  { font-size: 11px; color: #767674; }
+    .assign-unassign  { font-size: 13px; color: #767674; padding: 9px 14px; cursor: pointer; }
+    .assign-unassign:hover { background: #f5f5f5; color: #3A3A3A; }
+
+    /* Sidebar dynamic sections */
+    .sidebar-divider { border: none; border-top: 1px solid #e0e0e0; margin: 16px 0; }
+    .sidebar-section-heading { font-size: 15px; font-weight: 700; color: #202124; margin-bottom: 16px; }
+    .voucher-item { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0; }
+    .voucher-item:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+    .voucher-status-badge { display: inline-block; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 4px; }
+    .badge-redeemed { background: #dcfce7; border: 1.5px solid #22C55E; color: #166534; }
+    .badge-available { border: 1.5px solid #0471EC; color: #0471EC; }
+    .badge-canceled { background: #f3f4f6; border: 1.5px solid #9ca3af; color: #6b7280; }
+    .file-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 8px; }
+    .file-item-name { font-size: 13px; color: #0471EC; flex: 1; line-height: 18px; word-break: break-word; padding-top: 1px; }
+    .file-download-btn { background: none; border: none; cursor: pointer; color: #767674; display: flex; align-items: center; padding: 0; flex-shrink: 0; margin-top: 1px; }
+    .file-download-btn:hover { color: #0471EC; }
+
+    /* Chat panel */
+    .chat-panel { flex: 1; min-width: 0; background: white; border: 1px solid #e0e0e0; border-left: none; border-radius: 0 4px 4px 0; display: flex; flex-direction: column; overflow: hidden; }
+    .chat-messages { flex: 1; min-height: 0; padding: 24px; overflow-y: auto; }
+
+    .message-group { margin-bottom: 20px; }
+    .message-meta { font-size: 13px; color: #767674; margin-bottom: 8px; margin-left: 44px; }
+    .message-meta.sent-meta { text-align: right; margin-left: 0; margin-right: 44px; }
+    .message-row { display: flex; align-items: flex-start; gap: 12px; }
+    .message-row.sent { flex-direction: row-reverse; }
+    .message-avatar { width: 32px; height: 32px; border-radius: 50%; background: #e0e0e0; color: #555; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .message-bubble { background: #f1f3f4; border-radius: 4px 16px 16px 16px; padding: 14px 18px; max-width: 560px; font-size: 14px; line-height: 22px; color: #202124; }
+    .message-row.sent .message-bubble { background: #0471EC; color: white; border-radius: 16px 4px 16px 16px; }
+    .message-bubble p + p { margin-top: 8px; }
+
+    /* Attachment bubble */
+    .attachment-chip { display: inline-flex; align-items: center; gap: 10px; background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #202124; }
+    .attachment-chip svg { flex-shrink: 0; }
+    .attachment-download { background: none; border: none; cursor: pointer; color: #767674; display: flex; align-items: center; padding: 0; margin-left: 4px; }
+    .attachment-download:hover { color: #0471EC; }
+
+    /* System message */
+    .system-message { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
+    .system-message-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .system-message-body { font-size: 13px; color: #555; line-height: 20px; padding-top: 4px; }
+    .system-message-body .sys-meta { font-size: 12px; color: #999; margin-bottom: 3px; }
+    .system-message-body a { color: #0471EC; text-decoration: none; font-weight: 500; }
+    .system-message-body a:hover { text-decoration: underline; }
+
+    /* Typing indicator */
+    .typing-indicator { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .typing-avatar { width: 32px; height: 32px; border-radius: 50%; background: #e0e0e0; color: #555; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .typing-dots { background: #f1f3f4; border-radius: 4px 16px 16px 16px; padding: 14px 18px; display: flex; gap: 5px; align-items: center; }
+    .typing-dots span { width: 7px; height: 7px; border-radius: 50%; background: #aaa; animation: bounce 1.2s infinite ease-in-out; display: inline-block; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+    /* Composer */
+    .support-bar { flex-shrink: 0; padding: 12px 24px; background: #fafafa; border-top: 1px solid #e0e0e0; font-size: 13px; color: #555; }
+    .support-bar a { color: #0471EC; text-decoration: none; font-weight: 500; }
+    .support-bar a:hover { text-decoration: underline; }
+    .chat-composer { flex-shrink: 0; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-top: 1px solid #e0e0e0; background: white; }
+    .composer-attach { cursor: pointer; color: #767674; display: flex; align-items: center; }
+    .composer-input { flex: 1; border: 1px solid #e0e0e0; border-radius: 4px; padding: 10px 14px; font-size: 14px; font-family: inherit; color: #3A3A3A; outline: none; resize: none; height: 42px; }
+    .composer-input:focus { border-color: #0471EC; }
+    .send-btn { background: #0471EC; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; white-space: nowrap; }
+    .send-btn:hover { background: #0360c8; }
+    .send-btn:disabled { background: #a8c9f5; cursor: default; }
+
+    /* Provider strip */
+    .provider-strip { flex-shrink: 0; background: white; border-bottom: 1px solid #e0e0e0; }
+    .provider-strip-inner { max-width: 1280px; width: 100%; margin: 0 auto; padding: 0 32px; }
+    .provider-strip-breadcrumb { display: flex; align-items: center; gap: 6px; padding: 12px 0 10px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+    .provider-strip-breadcrumb a { color: #0471EC; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .provider-strip-breadcrumb a:hover { text-decoration: underline; }
+    .provider-strip-breadcrumb .sep { color: #ccc; }
+    .provider-strip-breadcrumb .current { color: #202124; font-weight: 600; }
+    .provider-tabs-row { display: flex; }
+    .provider-tab-btn { display: flex; align-items: center; gap: 12px; padding: 10px 20px 10px 0; margin-right: 28px; cursor: pointer; border: none; background: none; font-family: inherit; border-bottom: 2px solid transparent; transition: border-color 0.15s; text-align: left; }
+    .provider-tab-btn:hover .provider-tab-facility { color: #0471EC; }
+    .provider-tab-btn.active { border-bottom-color: #0471EC; }
+    .provider-tab-facility { font-size: 13px; font-weight: 600; color: #202124; display: block; line-height: 18px; }
+    .provider-tab-btn.active .provider-tab-facility { color: #0471EC; }
+    .provider-tab-doctor { font-size: 11px; color: #767674; display: block; }
+    .tab-status-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+    .tab-status-in-progress { border: 1.5px solid #0471EC; color: #0471EC; background: #eff6ff; }
+    .tab-status-pending { border: 1.5px solid #F59E0B; color: #B45309; background: #fffbeb; }
+    .chat-thread { flex: 1; min-height: 0; padding: 24px; overflow-y: auto; display: none; flex-direction: column; }
+    .chat-thread.active { display: flex; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box { background: white; border-radius: 12px; padding: 48px 48px 40px; width: 560px; max-width: calc(100vw - 48px); position: relative; max-height: calc(100vh - 80px); overflow-y: auto; }
+    .modal-close { position: absolute; top: 20px; right: 24px; background: none; border: none; font-size: 22px; cursor: pointer; color: #3A3A3A; line-height: 1; padding: 4px; }
+    .modal-close:hover { color: #000; }
+    .modal-title { font-size: 28px; font-weight: 700; color: #202124; text-align: center; margin-bottom: 12px; }
+    .modal-subtitle { font-size: 14px; color: #555; line-height: 22px; margin-bottom: 24px; }
+    .modal-label { font-size: 14px; color: #3A3A3A; display: block; margin-bottom: 8px; }
+    .modal-textarea { width: 100%; border: 1px solid #dadce0; border-radius: 4px; padding: 12px 14px; font-size: 14px; font-family: inherit; color: #3A3A3A; resize: vertical; min-height: 140px; outline: none; margin-bottom: 24px; }
+    .modal-textarea:focus { border-color: #0471EC; }
+    .drop-zone { border: 2px dashed #dadce0; border-radius: 8px; padding: 32px 24px; text-align: center; background: #fafafa; margin-bottom: 36px; }
+    .drop-zone-text { font-size: 15px; font-weight: 600; color: #202124; }
+    .drop-zone-text .browse-link { color: #0471EC; cursor: pointer; }
+    .drop-zone-hint { font-size: 13px; color: #767674; margin-top: 6px; }
+    .modal-actions { display: flex; align-items: center; justify-content: center; gap: 24px; }
+    .modal-cancel { background: none; border: none; font-size: 16px; color: #3A3A3A; cursor: pointer; padding: 12px 16px; font-family: inherit; }
+    .modal-cancel:hover { color: #000; }
+    .modal-send { background: #0471EC; color: white; border: none; border-radius: 100px; padding: 14px 36px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer; }
+    .modal-send:hover { background: #0360c8; }
+    .success-icon-wrap { width: 72px; height: 72px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .modal-success-title { font-size: 24px; font-weight: 700; color: #202124; text-align: center; margin-bottom: 10px; }
+    .modal-success-body { font-size: 14px; color: #555; line-height: 22px; text-align: center; margin-bottom: 32px; }
+  </style>
+</head>
+<body>
+
+<!-- CareConnect Nav -->
+<nav class="nav-wrapper">
+  <div class="nav-top">
+    <div class="nav-top-inner">
+      <div class="nav-employer-network">
+        <span>Example Employer</span>
+        <span style="color:#767674;padding:0 4px">/</span>
+        <span>Network Name</span>
+        <a href="#" style="margin-left:8px">Change</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <a href="tendo-navigator-inbox.html" class="nav-contact">
+          Inbox <span style="font-size:11px;color:#999;font-weight:400;">(prototype)</span>
+        </a>
+        <a href="#" class="nav-contact">
+          Contact Us
+          <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style="transform:rotate(180deg)"><path d="M1 1L6 6L11 1" stroke="#40403E" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-main">
+    <div class="nav-main-inner">
+      <div class="nav-logo-group">
+        <a href="tendo-navigator-home.html" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0;">
+          <svg width="176" height="48" viewBox="0 0 176 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:48px;width:auto;display:block;">
+<g clip-path="url(#clip0_4959_34133)">
+<rect width="48" height="48" fill="#0471EC"/>
+<path d="M7.41707 28.0137C8.81726 28.0137 9.47972 28.8295 9.47972 28.8295L8.88878 29.7645C8.88878 29.7645 8.33171 29.1719 7.48858 29.1719C6.49866 29.1719 5.85879 29.9338 5.85879 30.8728C5.85879 31.8117 6.50995 32.5928 7.52999 32.5928C8.43334 32.5928 9.10709 31.8925 9.10709 31.8925L9.62275 32.8622C9.62275 32.8622 8.8549 33.755 7.4133 33.755C5.63672 33.755 4.5 32.4736 4.5 30.8843C4.5 29.2951 5.64048 28.0137 7.41707 28.0137Z" fill="white"/>
+<path d="M12.9652 28.0137C14.6063 28.0137 15.9237 29.2066 15.9237 30.8843C15.9237 32.5621 14.6101 33.755 12.9765 33.755C11.343 33.755 10.0181 32.5736 10.0181 30.8843C10.0181 29.195 11.3317 28.0137 12.9652 28.0137ZM12.9765 32.5967C13.8385 32.5967 14.5649 31.9079 14.5649 30.8882C14.5649 29.8684 13.8385 29.1796 12.9765 29.1796C12.1146 29.1796 11.3769 29.88 11.3769 30.8882C11.3769 31.8963 12.1033 32.5967 12.9765 32.5967Z" fill="white"/>
+<path d="M16.7856 28.1446H18.0692V28.7795C18.0692 28.9834 18.0466 29.1566 18.0466 29.1566H18.0692C18.2988 28.6948 18.8897 28.0176 19.9737 28.0176C21.1631 28.0176 21.8369 28.6525 21.8369 30.1032V33.6319H20.512V30.3841C20.512 29.7184 20.3426 29.2643 19.6613 29.2643C18.98 29.2643 18.4192 29.7261 18.2197 30.3841C18.1444 30.6112 18.1256 30.8574 18.1256 31.1153V33.6319H16.7894V28.1446H16.7856Z" fill="white"/>
+<path d="M23.0259 28.1446H24.3094V28.7795C24.3094 28.9834 24.2868 29.1566 24.2868 29.1566H24.3094C24.539 28.6948 25.1299 28.0176 26.214 28.0176C27.4034 28.0176 28.0771 28.6525 28.0771 30.1032V33.6319H26.7522V30.3841C26.7522 29.7184 26.5828 29.2643 25.9015 29.2643C25.2203 29.2643 24.6594 29.7261 24.4599 30.3841C24.3847 30.6112 24.3658 30.8574 24.3658 31.1153V33.6319H23.0296V28.1446H23.0259Z" fill="white"/>
+<path d="M31.5915 28.0136C33.1384 28.0136 33.9703 29.1642 33.9703 30.6149C33.9703 30.7765 33.9402 31.1421 33.9402 31.1421H30.2364C30.3192 32.1002 31.0457 32.5928 31.8474 32.5928C32.7094 32.5928 33.3944 31.9886 33.3944 31.9886L33.9101 32.966C33.9101 32.966 33.0895 33.751 31.7533 33.751C29.9767 33.751 28.8701 32.4389 28.8701 30.8804C28.8701 29.1911 29.9955 28.0098 31.5952 28.0098L31.5915 28.0136ZM32.6228 30.207C32.6002 29.4643 32.1485 29.068 31.5613 29.068C30.8763 29.068 30.4058 29.499 30.2778 30.207H32.6228Z" fill="white"/>
+<path d="M37.5987 28.0137C38.9989 28.0137 39.6614 28.8295 39.6614 28.8295L39.0704 29.7645C39.0704 29.7645 38.5134 29.1719 37.6702 29.1719C36.6803 29.1719 36.0404 29.9338 36.0404 30.8728C36.0404 31.8117 36.6916 32.5928 37.7116 32.5928C38.615 32.5928 39.2887 31.8925 39.2887 31.8925L39.8044 32.8622C39.8044 32.8622 39.0365 33.755 37.5949 33.755C35.8184 33.755 34.6816 32.4736 34.6816 30.8843C34.6816 29.2951 35.8184 28.0137 37.5949 28.0137H37.5987Z" fill="white"/>
+<path d="M40.8537 29.3151H40.1611V28.23H40.8876V26.6484H42.1937V28.23H43.4132V29.3151H42.1937V31.4431C42.1937 32.3474 42.8862 32.4744 43.2551 32.4744C43.4019 32.4744 43.496 32.4513 43.496 32.4513V33.6442C43.496 33.6442 43.3379 33.675 43.0857 33.675C42.3405 33.675 40.8537 33.4479 40.8537 31.6086V29.3074V29.3151Z" fill="white"/>
+<path d="M10.2906 13C14.2549 13.1212 14.5341 14.6313 14.4276 16.4646H12.9212C12.7522 16.1523 13.5972 14.2749 10.2501 14.3888C7.70402 14.3888 6.14621 16.3875 6.14621 18.805C6.14621 21.2226 7.83996 23.3425 10.3714 23.3058C12.4509 23.2727 13.3437 22.5526 13.7919 22.3101C13.9573 22.2219 14.1086 22.1512 14.1159 22.2173C14.127 22.3129 13.5428 23.8008 13.4656 23.9C13.3885 23.9992 12.0063 24.7019 10.3236 24.768C6.90675 24.904 4.50391 22.1558 4.50391 18.8197C4.50391 15.4837 6.98757 13 10.2942 13H10.2906Z" fill="white"/>
+<path d="M18.3523 13.1873H20.1857L23.834 23.3644H24.5725V24.6283H22.6473L22.1807 23.3644L21.2879 20.8183H17.2354L16.3426 23.3644H17.5734V24.6283H14.2998L18.3523 13.1836V13.1873ZM20.8801 19.525L19.4876 15.5534C19.3884 15.2705 19.3259 14.9765 19.2929 14.6789H19.2451C19.2047 14.9765 19.1385 15.2668 19.0504 15.5534L17.6395 19.525H20.8801Z" fill="white"/>
+<path d="M25.0079 23.3638H26.0403V14.4322H24.6147V13.183H29.5747C30.2838 13.1499 30.9966 13.2307 31.68 13.4255C32.8777 13.8296 33.675 14.8363 33.675 16.3904C33.675 18.0438 32.7675 19.2268 31.3089 19.6016V19.6346C31.5146 19.7669 31.6836 19.9506 31.7939 20.1711L33.4141 22.9927C33.5942 23.3014 33.8036 23.3638 34.2077 23.3638H35.3614V24.6277H33.5758C32.6022 24.6277 32.378 24.4477 31.9886 23.768L30.2214 20.6377C29.9311 20.1527 29.718 20.0057 29.0236 20.0057H27.6605V23.3601H28.388V24.624H25.0079V23.3638ZM29.9605 18.6794C31.2097 18.6794 32.0364 17.8711 32.0364 16.5227C32.0364 15.6299 31.68 15.0163 30.9672 14.7224C30.5153 14.5681 30.0377 14.4946 29.5564 14.513H27.6605V18.6794H29.9605Z" fill="white"/>
+<path d="M35.99 23.3647V14.433H34.5645V13.1875H42.8458V14.5175H37.6103V18.1953H41.6591V19.5253H37.6103V23.3022H43.4998L43.4924 24.6322H35.99V23.3683V23.3647Z" fill="white"/>
+<path d="M113.933 18.3984L116.069 24.7461H116.095L118.256 18.3984H120.366L121.12 27.2438H119.484L118.973 20.5647H118.948L116.595 27.2844H115.43L113.125 20.5647H113.088L112.614 27.2438H111.015L111.743 18.3984H113.93H113.933Z" fill="#EC106F"/>
+<path d="M123.594 27.3874C122.392 27.3874 121.418 26.7353 121.418 25.4385C121.418 24.1417 122.686 23.6444 123.962 23.5523L125.447 23.4491V23.2797C125.447 22.4839 124.921 22.1118 124.065 22.1118C123.44 22.1045 122.826 22.2813 122.3 22.6239L121.8 21.574C122.535 21.1466 123.37 20.9219 124.215 20.9219C125.315 20.9219 125.943 21.2055 126.403 21.6403C126.851 22.075 127.083 22.6423 127.083 23.6923V27.2437H125.509L125.484 26.5253C125.226 26.9748 124.513 27.3837 123.591 27.3837M123.057 25.3869C123.057 25.9138 123.454 26.2711 124.131 26.2711C124.657 26.2711 125.149 26.0169 125.462 25.5932V24.4512L124.348 24.5175C123.477 24.5691 123.054 24.8638 123.054 25.3906" fill="#EC106F"/>
+<path d="M129.608 21.0407L129.582 22.0391H129.619C129.843 21.3833 130.453 20.9412 131.145 20.9228C131.369 20.9154 131.589 20.9523 131.795 21.037L131.681 22.459H131.604C131.383 22.4075 131.156 22.3817 130.924 22.3817C130.476 22.3559 130.053 22.588 129.836 22.9859C129.663 23.3616 129.586 23.7779 129.604 24.1905V27.2409H127.979V21.037H129.604L129.608 21.0407Z" fill="#EC106F"/>
+<path d="M133.971 18.3984V23.464L136.21 21.0399H138.015L135.725 23.3866L138.32 27.2475H136.427L134.622 24.4145L133.968 25.1071V27.2475H132.343V18.4021H133.968L133.971 18.3984Z" fill="#EC106F"/>
+<path d="M150.308 21.0408L150.282 21.9507C150.749 21.2618 151.539 20.8639 152.366 20.9008C154.182 20.9008 155.296 22.3118 155.296 24.1575C155.296 26.0032 154.131 27.3626 152.252 27.3626C151.469 27.4031 150.72 27.0458 150.256 26.4121C150.271 26.7953 150.264 27.1931 150.264 27.5763V29.5915H148.643V21.0408H150.304H150.308ZM153.635 24.1575C153.635 23.0817 152.969 22.2344 151.907 22.2344C150.922 22.2344 150.231 22.9896 150.231 24.1575C150.231 25.1964 150.911 26.1063 151.958 26.1063C153.006 26.1063 153.635 25.1964 153.635 24.1575Z" fill="#EC106F"/>
+<path d="M157.421 18.3984H155.796V27.2438H157.421V18.3984Z" fill="#EC106F"/>
+<path d="M160.185 27.3874C158.983 27.3874 158.009 26.7353 158.009 25.4385C158.009 24.1417 159.278 23.6444 160.553 23.5523L162.038 23.4491V23.2797C162.038 22.4839 161.513 22.1118 160.656 22.1118C160.031 22.1045 159.417 22.2813 158.892 22.6239L158.392 21.574C159.127 21.1503 159.958 20.9219 160.807 20.9219C161.906 20.9219 162.534 21.2055 162.994 21.6403C163.442 22.075 163.674 22.6423 163.674 23.6923V27.2437H162.101L162.075 26.5253C161.818 26.9748 161.105 27.3837 160.182 27.3837M159.645 25.3869C159.645 25.9138 160.042 26.2711 160.719 26.2711C161.244 26.2711 161.737 26.0169 162.049 25.5932V24.4512L160.935 24.5138C160.064 24.5654 159.641 24.8601 159.641 25.3869" fill="#EC106F"/>
+<path d="M167.387 27.3874C165.699 27.3874 164.137 26.2195 164.137 24.1933C164.108 22.4176 165.523 20.9513 167.295 20.9219C167.335 20.9219 167.372 20.9219 167.413 20.9219C168.971 20.9219 169.589 21.5482 169.754 21.7176L169.306 22.9481C168.846 22.5171 168.236 22.2813 167.604 22.296C166.663 22.2666 165.88 23.007 165.847 23.9465C165.847 24.0017 165.847 24.0607 165.847 24.1159C165.788 25.0959 166.534 25.9395 167.515 25.9985C167.574 25.9985 167.633 26.0022 167.692 25.9985C168.306 26.0095 168.901 25.7738 169.342 25.3464L169.802 26.5511C169.673 26.6653 169.034 27.3837 167.383 27.3837" fill="#EC106F"/>
+<path d="M147.11 26.017C146.893 26.0501 146.676 25.9654 146.533 25.7996C146.389 25.5012 146.33 25.166 146.367 24.8344V22.3182H147.801V21.0472H146.367V19.2715H144.739V25.1954C144.739 26.0317 144.878 26.5917 145.191 26.9343C145.551 27.2732 146.04 27.4427 146.533 27.3911C146.963 27.3911 147.393 27.3211 147.801 27.1848V25.9138C147.577 25.9765 147.341 26.0096 147.11 26.017Z" fill="#EC106F"/>
+<path d="M142.323 23.4901H139.658C139.761 22.7865 140.371 22.2707 141.081 22.2818C141.743 22.256 142.298 22.7718 142.323 23.4349V23.4901ZM144.04 23.8438C144.047 22.2634 142.775 20.9703 141.198 20.9629C141.143 20.9629 141.088 20.9629 141.033 20.9666C139.272 20.9813 137.857 22.4255 137.868 24.1901C137.868 24.227 137.868 24.2601 137.868 24.297C137.776 25.9621 139.048 27.3879 140.71 27.4837C140.812 27.4873 140.915 27.4873 141.015 27.4837C142.173 27.5463 143.268 26.9568 143.856 25.9548L142.753 25.2069C142.434 25.8 141.805 26.1574 141.132 26.1316C140.298 26.1316 139.61 25.4722 139.57 24.6396H143.948C144 24.378 144.025 24.1128 144.029 23.8438" fill="#EC106F"/>
+<path d="M174.283 23.4901H171.618C171.721 22.7865 172.331 22.2707 173.041 22.2818C173.702 22.256 174.257 22.7718 174.283 23.4349V23.4901ZM176 23.8438C176.007 22.2634 174.735 20.9703 173.158 20.9629C173.103 20.9629 173.048 20.9629 172.993 20.9666C171.232 20.9813 169.817 22.4255 169.831 24.1901C169.831 24.227 169.831 24.2601 169.831 24.297C169.739 25.9621 171.011 27.3879 172.673 27.4837C172.776 27.4873 172.879 27.4873 172.982 27.4837C174.14 27.5463 175.235 26.9568 175.823 25.9548L174.72 25.2069C174.401 25.8 173.772 26.1574 173.099 26.1316C172.265 26.1316 171.577 25.4722 171.537 24.6396H175.919C175.97 24.378 175.996 24.1128 176 23.8438Z" fill="#EC106F"/>
+<path d="M92.2608 27.249H93.9223V24.0512C93.9223 23.1744 93.8525 22.3787 93.3709 21.7561C92.9776 21.2477 92.3747 20.9492 91.7351 20.9492C90.9778 20.9456 90.2647 21.3103 89.8272 21.9329L89.6986 21.0892H88.2612V27.2453H89.9228V23.1597C90.2058 22.6881 90.7058 22.3897 91.2572 22.375C91.5917 22.3455 91.9115 22.515 92.077 22.8097C92.2313 23.2334 92.2938 23.6828 92.2644 24.1323V27.2453L92.2608 27.249Z" fill="#2F3330"/>
+<path d="M106.332 24.1512C106.332 25.1054 105.564 25.8827 104.612 25.8827C103.66 25.8827 102.884 25.1128 102.884 24.1586C102.884 23.2044 103.652 22.4271 104.605 22.4271C105.557 22.4271 106.329 23.1971 106.329 24.1512M107.851 24.1512C107.851 22.3534 106.402 20.8982 104.612 20.8945C102.822 20.8909 101.366 22.3461 101.362 24.1402C101.362 25.938 102.811 27.3932 104.601 27.3969H104.605C106.395 27.3969 107.847 25.9454 107.851 24.1512Z" fill="#2F3330"/>
+<path d="M99.1606 25.1514C98.8628 25.6672 98.304 25.9803 97.7122 25.9582C96.8079 25.9029 96.1205 25.1256 96.1756 24.2193C96.1756 24.2083 96.1756 24.2009 96.1756 24.1899C96.1756 23.3241 96.6682 22.3736 97.7306 22.3736C98.282 22.3626 98.8113 22.6094 99.1569 23.0404V25.1477L99.1606 25.1514ZM100.822 27.2476V18.4648H99.1606V21.6847C98.69 21.2021 98.043 20.9368 97.3703 20.9479C95.6977 20.9479 94.481 22.4105 94.481 24.142C94.481 25.8735 95.7198 27.3839 97.3446 27.3839C98.0872 27.4171 98.7966 27.0781 99.2377 26.4813V27.2402H100.818L100.822 27.2476Z" fill="#2F3330"/>
+<path d="M85.945 23.4433H83.3129C83.4159 22.747 84.0151 22.2386 84.7172 22.2497C85.3679 22.2239 85.9193 22.7323 85.945 23.3881C85.945 23.4065 85.945 23.4249 85.945 23.4433ZM87.6396 23.797C87.647 22.235 86.3898 20.9603 84.8311 20.9492C84.776 20.9492 84.7245 20.9492 84.6694 20.9529C82.927 20.9676 81.5301 22.3934 81.5448 24.1396C81.5448 24.1728 81.5448 24.2096 81.5448 24.2428C81.4529 25.8895 82.7101 27.2968 84.3533 27.3889C84.4525 27.3963 84.5554 27.3963 84.6547 27.3889C85.7979 27.4479 86.8824 26.8658 87.4632 25.8785L86.3751 25.1417C86.0589 25.7274 85.4377 26.0811 84.7723 26.0553C83.9489 26.0553 83.2688 25.4069 83.2284 24.5817H87.5551C87.6066 24.3238 87.6323 24.0622 87.636 23.797" fill="#2F3330"/>
+<path d="M79.8909 21.8321H81.4569V20.4505H79.8909V18.4648H78.2293V25.0335C78.2183 25.3798 78.2587 25.7261 78.347 26.065C78.5602 26.8866 79.3248 27.4429 80.1703 27.3876C80.6702 27.3876 81.1628 27.266 81.6076 27.0376C81.3172 26.695 81.0893 26.3008 80.9349 25.8771C80.7805 25.9398 80.6151 25.9692 80.4496 25.9692C80.1004 25.9692 79.9571 25.7482 79.9129 25.3835C79.8946 25.2103 79.8872 25.0335 79.8909 24.8567V21.8284V21.8321Z" fill="#2F3330"/>
+<path d="M70.3662 23.2789V27.3682H72.5351V23.2494C72.5351 21.8458 73.671 20.7074 75.0752 20.7037H75.1267V18.5117C72.502 18.5117 70.3699 20.6411 70.3699 23.2752" fill="#EC106F"/>
+<path d="M69.8037 23.2789V27.3682H67.6348V23.2494C67.6348 21.8458 66.4989 20.7074 65.0983 20.7037H65.0469V18.5117C67.6716 18.5117 69.8037 20.6411 69.8037 23.2752" fill="#EC106F"/>
+<path d="M59.9223 19.4707L63.205 27.3767H62.2346L61.3633 25.1736H57.7645L56.8896 27.3767H56L59.2717 19.4707H59.9223ZM59.5658 20.6385L58.0623 24.4184H61.0619L59.5658 20.6385Z" fill="#2F3330"/>
+</g>
+<defs>
+<clipPath id="clip0_4959_34133">
+<rect width="176" height="48" fill="white"/>
+</clipPath>
+</defs>
+          </svg>
+        </a>
+        <ul class="nav-links">
+          <li><a href="tendo-cases-navigator.html" class="active">Cases</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Vouchers</a></li>
+          <li><a href="#">Invoices</a></li>
+          <li><a href="#">Payment Methods</a></li>
+          <li><a href="#">Patient Carts</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <div style="display:flex;align-items:center;gap:4px;cursor:pointer">
+          <div class="nav-avatar">AB</div>
+          <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1L6 6L11 1" stroke="#40403E" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <a href="tendo-employer-offer-page.html" class="nav-icon">
+          <svg viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="#40403E" stroke-width="1.5"/><path d="M14 14L18 18" stroke="#40403E" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <div class="nav-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M2 3h2l2.4 10h9.2l1.8-7H6.4" stroke="#40403E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="17" r="1.5" fill="#40403E"/><circle cx="14" cy="17" r="1.5" fill="#40403E"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+
+  <!-- Provider strip -->
+  <div class="provider-strip">
+    <div class="provider-strip-inner">
+      <div class="provider-strip-breadcrumb">
+        <a href="tendo-cases-navigator.html">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#0471EC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Cases
+        </a>
+        <span class="sep">/</span>
+        <span class="current">Sarah Johnson</span>
+        <span class="sep">·</span>
+        <span style="color:#767674;font-size:13px;">Knee Replacement Surgery (outpatient)</span>
+      </div>
+      <div class="provider-tabs-row">
+        <button class="provider-tab-btn active" onclick="switchProvider(0, this)">
+          <div>
+            <span class="provider-tab-facility">Goshen Hospital</span>
+            <span class="provider-tab-doctor">Dr. Jakob Kenter</span>
+          </div>
+          <span class="tab-status-badge tab-status-in-progress">In Progress</span>
+        </button>
+        <button class="provider-tab-btn" onclick="switchProvider(1, this)">
+          <div>
+            <span class="provider-tab-facility">Valley Orthopedic</span>
+            <span class="provider-tab-doctor">Dr. Sarah Chen</span>
+          </div>
+          <span class="tab-status-badge tab-status-pending">Awaiting Response</span>
+        </button>
+        <button class="provider-tab-btn" onclick="switchProvider(2, this)">
+          <div>
+            <span class="provider-tab-facility">St. Mary's Hospital</span>
+            <span class="provider-tab-doctor">Dr. Michael Torres</span>
+          </div>
+          <span class="tab-status-badge tab-status-pending">Awaiting Response</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="thread-wrap">
+    <div class="thread-layout">
+
+      <!-- Case Details Sidebar (read-only for navigator) -->
+      <div class="case-sidebar">
+        <div class="sidebar-heading">Case Details</div>
+
+        <!-- Case Info (always expanded) -->
+        <div class="detail-row"><div class="detail-label">Case ID</div><div class="detail-value" id="sb-case-id">VH-12345</div></div>
+        <div class="detail-row"><div class="detail-label">Partner</div><div class="detail-value">Valenz Health</div></div>
+        <div class="detail-row"><div class="detail-label">Procedure</div><div class="detail-value">Knee Replacement Surgery (outpatient)</div></div>
+        <div class="detail-row"><div class="detail-label">Provider</div><div class="detail-value" id="sb-provider">Dr. Jakob Kenter</div></div>
+        <div class="detail-row"><div class="detail-label">Facility</div><div class="detail-value" id="sb-facility">Goshen Hospital</div></div>
+        <div class="detail-row">
+          <div class="detail-label">Case Status</div>
+          <div class="detail-value">
+            <div class="status-dropdown-wrap">
+              <span class="status-badge status-in_progress" id="case-status-badge" onclick="toggleStatusDropdown(event)">
+                <span id="status-text">In Progress</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <div class="status-dropdown" id="status-dropdown" style="display:none;">
+                <div class="status-dropdown-section-label">Auto</div>
+                <div class="status-dropdown-item" data-status="pending_response" onclick="setStatus('pending_response', true)">
+                  <span class="status-dot" style="background:#F59E0B;"></span>Pending Response
+                </div>
+                <div class="status-dropdown-item active" data-status="in_progress" onclick="setStatus('in_progress', true)">
+                  <span class="status-dot" style="background:#0471EC;"></span>In Progress
+                </div>
+                <div class="status-dropdown-divider"></div>
+                <div class="status-dropdown-section-label">Manual</div>
+                <div class="status-dropdown-item" data-status="resolved" onclick="setStatus('resolved', true)">
+                  <span class="status-dot" style="background:#9ca3af;"></span>Resolved
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-row"><div class="detail-label">Date Created</div><div class="detail-value" id="sb-date-created">04/28/2026</div></div>
+        <div class="detail-row">
+          <div class="detail-label">Assigned To</div>
+          <div class="assign-dropdown-wrap">
+            <div class="assigned-row" id="assigned-row" onclick="toggleAssignDropdown(event)">
+              <div class="assigned-avatar" id="assigned-avatar">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" stroke="#aaa" stroke-width="1.5"/><path d="M3 18c0-4 3-6 7-6s7 2 7 6" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <span class="detail-value" id="assigned-name">Unassigned</span>
+              <svg class="assigned-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5l5 5 5-5" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="assign-dropdown" id="assign-dropdown" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- Patient Info -->
+        <hr class="sidebar-divider">
+        <div class="sidebar-section-heading" style="font-size:13px;margin-bottom:12px;">Patient Info</div>
+
+        <!-- Always-visible fields -->
+        <div class="detail-row">
+          <div class="detail-label">Patient Name</div>
+          <div class="detail-value">Sarah Johnson</div>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M8 1a3 3 0 0 0-3 3v2H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-1.5 5V4a1.5 1.5 0 0 1 3 0v2h-3z" fill="#767674"/></svg>
+            <span style="font-size:11px;color:#767674;font-style:italic;">Hidden from provider until after purchase</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">DOB</div>
+          <div class="detail-value">05/14/1978</div>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M8 1a3 3 0 0 0-3 3v2H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-1.5 5V4a1.5 1.5 0 0 1 3 0v2h-3z" fill="#767674"/></svg>
+            <span style="font-size:11px;color:#767674;font-style:italic;">Hidden from provider until after purchase</span>
+          </div>
+        </div>
+        <div class="detail-row"><div class="detail-label">Gender</div><div class="detail-value">Female</div></div>
+
+        <!-- Expandable fields -->
+        <div id="patient-extra" style="display:none;">
+          <div class="detail-row"><div class="detail-label">Age</div><div class="detail-value">47</div></div>
+          <div class="detail-row"><div class="detail-label">Phone</div><div class="detail-value">(555) 123-4567</div></div>
+          <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">sarah.johnson@acmeco.com</div></div>
+          <div class="detail-row"><div class="detail-label">Address</div><div class="detail-value">123 Main Street, Apt 4B</div></div>
+          <div class="detail-row"><div class="detail-label">State</div><div class="detail-value">California</div></div>
+          <div class="detail-row"><div class="detail-label">Zip</div><div class="detail-value">90210</div></div>
+        </div>
+        <a href="#" id="patient-toggle" onclick="togglePatientExtra(event)" style="font-size:13px;color:#0471EC;text-decoration:none;display:inline-block;margin-bottom:4px;">View more</a>
+
+        <!-- Purchased Vouchers -->
+        <div id="voucher-section" style="display:none;">
+          <hr class="sidebar-divider">
+          <div class="sidebar-section-heading">Purchased Vouchers</div>
+          <div id="voucher-list"></div>
+        </div>
+
+        <!-- Attached Files -->
+        <div id="files-section" style="display:none;">
+          <hr class="sidebar-divider">
+          <div class="sidebar-section-heading">Attached Files</div>
+          <div id="files-list"></div>
+        </div>
+      </div>
+
+      <!-- Chat Panel -->
+      <div class="chat-panel">
+
+        <!-- Thread 0: Goshen Hospital (active) -->
+        <div class="chat-thread active" id="chat-thread-0">
+          <div class="message-group">
+            <div class="message-meta sent-meta">Abigail Brown, 04/28/26 at 3:00 PM</div>
+            <div class="message-row sent">
+              <div class="message-avatar" style="background:#0471EC;color:white;">A</div>
+              <div class="message-bubble">
+                <p>Hello,</p>
+                <p>I have a patient with a BMI of 49 who needs a knee replacement surgery. Is Dr. Jakob Kenter able to accommodate?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thread 1: Valley Orthopedic -->
+        <div class="chat-thread" id="chat-thread-1">
+          <div class="message-group">
+            <div class="message-meta sent-meta">Abigail Brown, 05/06/26 at 9:14 AM</div>
+            <div class="message-row sent">
+              <div class="message-avatar" style="background:#0471EC;color:white;">A</div>
+              <div class="message-bubble">
+                <p>Hello,</p>
+                <p>I have a patient with a BMI of 49 who needs a knee replacement surgery. Is Dr. Sarah Chen able to accommodate?</p>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+            <div style="text-align:center;color:#767674;">
+              <svg width="36" height="36" viewBox="0 0 40 40" fill="none" style="margin-bottom:10px;opacity:0.35;"><circle cx="20" cy="20" r="18" stroke="#767674" stroke-width="2"/><path d="M20 12v9l5 5" stroke="#767674" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p style="font-size:13px;line-height:20px;">Awaiting response from Valley Orthopedic</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thread 2: St. Mary's Hospital -->
+        <div class="chat-thread" id="chat-thread-2">
+          <div class="message-group">
+            <div class="message-meta sent-meta">Abigail Brown, 05/06/26 at 9:16 AM</div>
+            <div class="message-row sent">
+              <div class="message-avatar" style="background:#0471EC;color:white;">A</div>
+              <div class="message-bubble">
+                <p>Hello,</p>
+                <p>I have a patient with a BMI of 49 who needs a knee replacement surgery. Is Dr. Michael Torres able to accommodate?</p>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+            <div style="text-align:center;color:#767674;">
+              <svg width="36" height="36" viewBox="0 0 40 40" fill="none" style="margin-bottom:10px;opacity:0.35;"><circle cx="20" cy="20" r="18" stroke="#767674" stroke-width="2"/><path d="M20 12v9l5 5" stroke="#767674" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p style="font-size:13px;line-height:20px;">Awaiting response from St. Mary's Hospital</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="support-bar">
+          Request Tendo Support at any time to bring a Tendo team member into the conversation. <a href="#" onclick="openSupportModal(); return false;">Request Tendo support.</a>
+        </div>
+        <div class="chat-composer">
+          <div class="composer-attach" onclick="document.getElementById('file-input').click()" title="Attach file">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16 9l-6 6a4 4 0 01-5.66-5.66l6-6a2.5 2.5 0 013.54 3.54l-6 6a1 1 0 01-1.42-1.42l5.3-5.29" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <input type="file" id="file-input" style="display:none;" onchange="handleFileAttach(this)">
+          <input id="composer-input" class="composer-input" type="text" placeholder="Write your message...">
+          <button id="send-btn" class="send-btn" onclick="handleSend()">Send</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Request Tendo Support Modal -->
+<div class="modal-overlay" id="support-modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeSupportModal()">×</button>
+    <div id="modal-form-view">
+      <h2 class="modal-title">Request Tendo Support</h2>
+      <p class="modal-subtitle">Bring a Tendo team member into this conversation. Tendo Support typically responds within 1 business day.</p>
+      <label class="modal-label">Message to Tendo Support</label>
+      <p style="font-size:12px;color:#767674;margin-top:-4px;margin-bottom:8px;">Your message will appear in the conversation thread.</p>
+      <textarea class="modal-textarea" id="support-message" placeholder="Tell Tendo what you need help with..."></textarea>
+      <label class="modal-label">Attachments (Optional)</label>
+      <div class="drop-zone">
+        <div class="drop-zone-text">Drop your file here, or <span class="browse-link">browse</span></div>
+        <div class="drop-zone-hint">Max file size: 1MB</div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeSupportModal()">Cancel</button>
+        <button class="modal-send" onclick="sendSupportMessage()">Send Message</button>
+      </div>
+    </div>
+    <div id="modal-success-view" style="display:none; text-align:center;">
+      <div class="success-icon-wrap">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M7 16l6 6 12-12" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2 class="modal-success-title">Support request sent!</h2>
+      <p class="modal-success-body">A Tendo team member will be in touch within 1 business day.</p>
+      <div class="modal-actions">
+        <button class="modal-send" onclick="closeSupportModal()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var activeThreadIdx = 0;
+
+  var THREAD_DATA = [
+    { caseId: 'VH-12345', provider: 'Dr. Jakob Kenter', facility: 'Goshen Hospital', statusClass: 'status-in_progress', statusLabel: 'In Progress', dateCreated: '04/28/2026' },
+    { caseId: 'VH-12349', provider: 'Dr. Sarah Chen',   facility: 'Valley Orthopedic',   statusClass: 'status-pending_response', statusLabel: 'Pending Response', dateCreated: '05/06/2026' },
+    { caseId: 'VH-12350', provider: 'Dr. Michael Torres', facility: "St. Mary's Hospital", statusClass: 'status-pending_response', statusLabel: 'Pending Response', dateCreated: '05/06/2026' }
+  ];
+
+  function switchProvider(idx, btn) {
+    // Update tab buttons
+    document.querySelectorAll('.provider-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+
+    // Show/hide threads
+    document.querySelectorAll('.chat-thread').forEach(function(t, i) {
+      t.classList.toggle('active', i === idx);
+    });
+
+    // Update sidebar fields
+    var d = THREAD_DATA[idx];
+    document.getElementById('sb-case-id').textContent = d.caseId;
+    document.getElementById('sb-provider').textContent = d.provider;
+    document.getElementById('sb-facility').textContent = d.facility;
+    document.getElementById('sb-date-created').textContent = d.dateCreated;
+    var badge = document.getElementById('case-status-badge');
+    badge.className = 'status-badge ' + d.statusClass;
+    document.getElementById('status-text').textContent = d.statusLabel;
+
+    activeThreadIdx = idx;
+  }
+
+  // ── NAVIGATOR POV: Abigail Brown's messages are "sent" (blue), Emily King's are "received" (gray) ──
+  const SCRIPT = [
+    {
+      type: 'received',
+      meta: 'Emily King from Goshen Hospital, 04/28/26 at 4:00 PM',
+      avatar: 'E',
+      avatarStyle: 'background:#e8f0fe;color:#0471EC;',
+      html: '<p>Yes, that should be fine.</p>',
+      pauseAfter: true
+    },
+    {
+      type: 'sent',
+      meta: 'Abigail Brown, 04/28/26 at 9:50 AM',
+      avatar: 'A',
+      avatarStyle: 'background:#0471EC;color:white;',
+      html: '<p>Great, thank you. I will purchase the surgery and office visit now.</p>'
+    },
+    {
+      type: 'system',
+      meta: 'System Message, 04/28/26 at 9:55 AM',
+      html: 'New purchase: {Procedure Name} (Voucher #55555-01) and {Procedure Name} (Voucher #55555-02).',
+      link: 'View order',
+      pauseAfter: true,
+      sidebarAction: {
+        type: 'addVouchers',
+        vouchers: [
+          { procedure: 'Orthopedic New Patient Office Visit', price: '$xxx', number: '#55555-01', status: 'Available', appointment: 'N/A' },
+          { procedure: 'Knee Replacement Surgery (outpatient)', price: '$xx,xxx', number: '#55555-02', status: 'Available', appointment: 'N/A' }
+        ]
+      }
+    },
+    {
+      type: 'sent',
+      meta: 'Abigail Brown, 04/28/26 at 9:59 AM',
+      avatar: 'A',
+      avatarStyle: 'background:#0471EC;color:white;',
+      html: '<p>Hi,</p><p>I just purchased the vouchers for this patient. I am also attaching this patient\'s medical records from a consultation they had in the past 3 months.</p>'
+    },
+    {
+      type: 'sent-attachment',
+      meta: 'Abigail Brown, 04/28/26 at 10:01 AM',
+      avatar: 'A',
+      avatarStyle: 'background:#0471EC;color:white;',
+      filename: 'Sarah Johnson_Medical Records.pdf',
+      sidebarAction: { type: 'addFile', filename: 'Sarah Johnson_Medical Records.pdf' }
+    },
+    {
+      type: 'received',
+      meta: 'Emily King from Goshen Hospital, 04/28/26 at 2:45 PM',
+      avatar: 'E',
+      avatarStyle: 'background:#e8f0fe;color:#0471EC;',
+      html: '<p>Thank you for the medical records. We\'ll call the patient to schedule the new patient office visit.</p>'
+    },
+    {
+      type: 'system',
+      meta: 'System Message, 04/29/26 at 1:10 PM',
+      html: 'Appointment scheduled: Orthopedic New Patient Office Visit on 05/18/2026',
+      pauseAfter: true,
+      sidebarAction: { type: 'updateVoucher', number: '#55555-01', appointment: '05/18/2026' }
+    },
+    {
+      type: 'sent',
+      meta: 'Abigail Brown, 05/16/26 at 11:00 AM',
+      avatar: 'A',
+      avatarStyle: 'background:#0471EC;color:white;',
+      html: '<p>Hi, can you please confirm the address for the office visit on March 18th?</p>'
+    },
+    {
+      type: 'received',
+      meta: 'Emily King from Goshen Hospital, 05/16/26 at 2:45 PM',
+      avatar: 'E',
+      avatarStyle: 'background:#e8f0fe;color:#0471EC;',
+      html: '<p>The appointment will be at Goshen Hospital, 123 Healthcare Drive, Building A, Suite 300.</p>'
+    },
+    {
+      type: 'system',
+      meta: 'System Message, 05/18/26 at 2:30 PM',
+      html: 'Procedure completed: Orthopedic New Patient Office Visit (Voucher #55555-01).',
+      pauseAfter: true,
+      sidebarAction: { type: 'updateVoucher', number: '#55555-01', status: 'Redeemed' }
+    },
+    {
+      type: 'attachment',
+      meta: 'Emily King from Goshen Hospital, 05/19/26 at 11:00 AM',
+      avatar: 'E',
+      avatarStyle: 'background:#e8f0fe;color:#0471EC;',
+      filename: 'Sarah Johnson_post_op_clinical_notes.pdf',
+      sidebarAction: { type: 'addFile', filename: 'Sarah Johnson_post_op_clinical_notes.pdf' }
+    },
+    {
+      type: 'received',
+      meta: 'Emily King from Goshen Hospital, 05/19/26 at 11:02 AM',
+      avatar: 'E',
+      avatarStyle: 'background:#e8f0fe;color:#0471EC;',
+      html: '<p>After examining Sarah, Dr. Kenter recommends a partial knee replacement instead of total knee replacement. Please see the attached clinical notes. Recommended procedure: CPT 27446</p>',
+      pauseAfter: true
+    },
+    {
+      type: 'system',
+      meta: 'System Message, 05/19/26 at 1:30 PM',
+      html: 'Requested voucher cancellation: Abigail Brown requested cancellation of Voucher #55555-02 (Knee Replacement Surgery - outpatient).'
+    },
+    {
+      type: 'system',
+      meta: 'System Message, 05/19/26 at 1:35 PM',
+      html: 'New purchase: Partial Knee Replacement (outpatient) (Voucher #66666-01).',
+      link: 'View order',
+      sidebarAction: { type: 'addVoucher', voucher: { procedure: 'Partial Knee Replacement (outpatient)', price: '$xx,xxx', number: '#66666-01', status: 'Available', appointment: 'N/A' } }
+    },
+    {
+      type: 'system',
+      meta: 'System Message, 05/20/26 at 10:05 AM',
+      html: 'Voucher cancelled: Knee Replacement Surgery (outpatient) (Voucher #55555-02) has been cancelled.',
+      sidebarAction: { type: 'updateVoucher', number: '#55555-02', status: 'Canceled' }
+    }
+  ];
+
+  let scriptIndex = 0;
+  let isPlaying = false;
+
+  const chatMessages = document.getElementById('chat-messages');
+  const composerInput = document.getElementById('composer-input');
+  const sendBtn = document.getElementById('send-btn');
+
+  composerInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+  });
+
+  function handleSend() {
+    if (isPlaying || scriptIndex >= SCRIPT.length) return;
+    const text = composerInput.value.trim();
+    if (!text) return;
+    composerInput.value = '';
+    composerInput.disabled = true;
+    sendBtn.disabled = true;
+    isPlaying = true;
+    playNext();
+  }
+
+  function handleFileAttach(input) {
+    if (isPlaying || !input.files || !input.files[0]) return;
+    const filename = input.files[0].name;
+    input.value = ''; // reset so the same file can be re-selected
+    composerInput.disabled = true;
+    sendBtn.disabled = true;
+    isPlaying = true;
+    // Post the real file as a sent-attachment, then continue the script
+    appendMessage({
+      type: 'sent-attachment',
+      meta: 'Abigail Brown',
+      avatar: 'A',
+      avatarStyle: 'background:#0471EC;color:white;',
+      filename: filename
+    });
+    scrollToBottom();
+    setTimeout(playNext, 1800);
+  }
+
+  function playNext() {
+    if (scriptIndex >= SCRIPT.length) {
+      isPlaying = false;
+      composerInput.disabled = false;
+      sendBtn.disabled = false;
+      composerInput.focus();
+      return;
+    }
+
+    const msg = SCRIPT[scriptIndex];
+    scriptIndex++;
+
+    if (msg.type === 'sent' || msg.type === 'sent-attachment') {
+      appendMessage(msg);
+      scrollToBottom();
+      setTimeout(playNext, 1800);
+    } else if (msg.type === 'system') {
+      setTimeout(() => {
+        appendMessage(msg);
+        scrollToBottom();
+        if (msg.pauseAfter) {
+          isPlaying = false;
+          composerInput.disabled = false;
+          sendBtn.disabled = false;
+          composerInput.focus();
+        } else {
+          setTimeout(playNext, 800);
+        }
+      }, 800);
+    } else {
+      // received or attachment — show typing indicator
+      const indicator = showTypingIndicator(msg.avatar, msg.avatarStyle || '');
+      scrollToBottom();
+      setTimeout(() => {
+        indicator.remove();
+        appendMessage(msg);
+        scrollToBottom();
+        if (msg.pauseAfter) {
+          isPlaying = false;
+          composerInput.disabled = false;
+          sendBtn.disabled = false;
+          composerInput.focus();
+        } else {
+          setTimeout(playNext, 1600);
+        }
+      }, 1600);
+    }
+  }
+
+  function appendMessage(msg) {
+    const group = document.createElement('div');
+    group.className = 'message-group';
+
+    if (msg.type === 'sent') {
+      group.innerHTML = `
+        <div class="message-meta sent-meta">${msg.meta}</div>
+        <div class="message-row sent">
+          <div class="message-avatar" style="${msg.avatarStyle || ''}">${msg.avatar}</div>
+          <div class="message-bubble">${msg.html}</div>
+        </div>`;
+    } else if (msg.type === 'received') {
+      group.innerHTML = `
+        <div class="message-meta">${msg.meta}</div>
+        <div class="message-row">
+          <div class="message-avatar" style="${msg.avatarStyle || ''}">${msg.avatar}</div>
+          <div class="message-bubble">${msg.html}</div>
+        </div>`;
+    } else if (msg.type === 'attachment') {
+      group.innerHTML = `
+        <div class="message-meta">${msg.meta}</div>
+        <div class="message-row">
+          <div class="message-avatar" style="${msg.avatarStyle || ''}">${msg.avatar}</div>
+          <div class="attachment-chip">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M16 9l-6 6a4 4 0 01-5.66-5.66l6-6a2.5 2.5 0 013.54 3.54l-6 6a1 1 0 01-1.42-1.42l5.3-5.29" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span>${msg.filename}</span>
+            <button class="attachment-download" title="Download">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 9l4 4 4-4" stroke="#767674" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16h12" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>`;
+    } else if (msg.type === 'sent-attachment') {
+      group.innerHTML = `
+        <div class="message-meta sent-meta">${msg.meta}</div>
+        <div class="message-row sent">
+          <div class="message-avatar" style="${msg.avatarStyle || ''}">${msg.avatar}</div>
+          <div class="attachment-chip">
+            <button class="attachment-download" title="Download">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 9l4 4 4-4" stroke="#767674" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16h12" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M16 9l-6 6a4 4 0 01-5.66-5.66l6-6a2.5 2.5 0 013.54 3.54l-6 6a1 1 0 01-1.42-1.42l5.3-5.29" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span>${msg.filename}</span>
+          </div>
+        </div>`;
+    } else if (msg.type === 'system') {
+      group.className = 'system-message';
+      group.innerHTML = `
+        <div class="system-message-icon">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 13a3 3 0 100-6 3 3 0 000 6z" stroke="#767674" stroke-width="1.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="system-message-body">
+          <div class="sys-meta">${msg.meta}</div>
+          ${msg.html}${msg.link ? ` <a href="#">${msg.link} ↗</a>` : ''}
+        </div>`;
+    }
+
+    chatMessages.appendChild(group);
+    if (msg.sidebarAction) applySidebarAction(msg.sidebarAction);
+
+    // Auto-update case status based on message direction
+    if (msg.statusAction) {
+      setStatus(msg.statusAction, false);
+    } else if (msg.type === 'sent' || msg.type === 'sent-attachment') {
+      setStatus('pending_response', false);
+    } else if (msg.type === 'received' || msg.type === 'attachment') {
+      setStatus('in_progress', false);
+    }
+  }
+
+  function applySidebarAction(action) {
+    if (action.type === 'addVouchers') {
+      const list = document.getElementById('voucher-list');
+      action.vouchers.forEach(v => list.appendChild(buildVoucherItem(v)));
+      document.getElementById('voucher-section').style.display = '';
+    } else if (action.type === 'addVoucher') {
+      document.getElementById('voucher-list').appendChild(buildVoucherItem(action.voucher));
+    } else if (action.type === 'updateVoucher') {
+      const item = document.querySelector('[data-voucher="' + action.number + '"]');
+      if (!item) return;
+      if (action.status) {
+        const badge = item.querySelector('.voucher-status-badge');
+        badge.textContent = action.status;
+        badge.className = 'voucher-status-badge badge-' + action.status.toLowerCase();
+      }
+      if (action.appointment) item.querySelector('.voucher-appointment').textContent = action.appointment;
+    } else if (action.type === 'addFile') {
+      const list = document.getElementById('files-list');
+      const item = document.createElement('div');
+      item.className = 'file-item';
+      item.innerHTML = `<svg style="flex-shrink:0;margin-top:1px;" width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 2h8l4 4v12a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="#0471EC" stroke-width="1.5"/><path d="M12 2v4h4" stroke="#0471EC" stroke-width="1.5"/></svg><span class="file-item-name">${action.filename}</span><button class="file-download-btn"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 9l4 4 4-4" stroke="#767674" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16h12" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
+      list.appendChild(item);
+      document.getElementById('files-section').style.display = '';
+    }
+  }
+
+  function buildVoucherItem(v) {
+    const div = document.createElement('div');
+    div.className = 'voucher-item';
+    div.setAttribute('data-voucher', v.number);
+    div.innerHTML = `
+      <div class="detail-label">Procedure</div>
+      <div class="detail-value" style="margin-bottom:10px;">${v.procedure}</div>
+      <div class="detail-label">Price</div>
+      <div class="detail-value" style="margin-bottom:10px;">${v.price}</div>
+      <div class="detail-label">Voucher Number</div>
+      <div class="detail-value" style="margin-bottom:10px;">${v.number}</div>
+      <div class="detail-label">Voucher Status</div>
+      <div style="margin-bottom:10px;"><span class="voucher-status-badge badge-${v.status.toLowerCase()}">${v.status}</span></div>
+      <div class="detail-label">Appointment</div>
+      <div class="detail-value voucher-appointment">${v.appointment}</div>`;
+    return div;
+  }
+
+  function showTypingIndicator(avatar, avatarStyle) {
+    const el = document.createElement('div');
+    el.className = 'typing-indicator';
+    el.innerHTML = `
+      <div class="typing-avatar" style="${avatarStyle}">${avatar}</div>
+      <div class="typing-dots"><span></span><span></span><span></span></div>`;
+    chatMessages.appendChild(el);
+    return el;
+  }
+
+  function scrollToBottom() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  // ── CASE ID & STATUS ────────────────────────────────────────────────────
+  const CASE_ID = 'VH-12345';
+
+  const STATUS_META = {
+    pending_response:  { label: 'Pending Response',  cls: 'status-pending_response'  },
+    in_progress:       { label: 'In Progress',        cls: 'status-in_progress'        },
+    provider_complete: { label: 'Provider Complete',  cls: 'status-provider_complete'  },
+    resolved:          { label: 'Resolved',           cls: 'status-resolved'           }
+  };
+
+  let currentStatus = 'in_progress';
+
+  function persistCaseState() {
+    const person = assignedTo ? TEAMMATES.find(t => t.id === assignedTo) : null;
+    const state = JSON.parse(localStorage.getItem('caseState_' + CASE_ID) || '{}');
+    state.visited    = true;
+    state.status     = currentStatus;
+    state.assignedTo = assignedTo;
+    state.assignedName = person ? person.name : null;
+    localStorage.setItem('caseState_' + CASE_ID, JSON.stringify(state));
+  }
+
+  function setStatus(value, manual) {
+    if (value === currentStatus && !manual) return;
+    currentStatus = value;
+    const badge = document.getElementById('case-status-badge');
+    const meta  = STATUS_META[value];
+    badge.className = 'status-badge ' + meta.cls;
+    document.getElementById('status-text').textContent = meta.label;
+    document.querySelectorAll('#status-dropdown .status-dropdown-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.status === value);
+    });
+    document.getElementById('status-dropdown').style.display = 'none';
+    persistCaseState();
+    if (manual) {
+      const group = document.createElement('div');
+      group.className = 'system-message';
+      group.innerHTML = `
+        <div class="system-message-icon">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#767674" stroke-width="1.5"/><path d="M10 6v4l3 2" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="system-message-body">
+          Status updated to <strong>${meta.label}</strong> by Abigail Brown.
+        </div>`;
+      chatMessages.appendChild(group);
+      scrollToBottom();
+    }
+  }
+
+  function togglePatientExtra(e) {
+    e.preventDefault();
+    var extra = document.getElementById('patient-extra');
+    var link = document.getElementById('patient-toggle');
+    var isHidden = extra.style.display === 'none';
+    extra.style.display = isHidden ? '' : 'none';
+    link.textContent = isHidden ? 'View less' : 'View more';
+  }
+
+  function toggleStatusDropdown(e) {
+    e.stopPropagation();
+    const dd = document.getElementById('status-dropdown');
+    dd.style.display = dd.style.display === 'none' ? '' : 'none';
+  }
+
+  document.getElementById('status-dropdown').addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+
+  // ── ASSIGNED TO ─────────────────────────────────────────────────────────
+  const TEAMMATES = [
+    { id: 'abigail', name: 'Abigail Brown',  initials: 'AB', color: '#0471EC', isMe: true  },
+    { id: 'skylar',  name: 'Skylar Workman', initials: 'SW', color: '#7C3AED', isMe: false },
+    { id: 'marcus',  name: 'Marcus Chen',    initials: 'MC', color: '#059669', isMe: false },
+    { id: 'priya',   name: 'Priya Nair',     initials: 'PN', color: '#D97706', isMe: false }
+  ];
+
+  let assignedTo = null;
+
+  function buildAssignDropdown() {
+    const dd = document.getElementById('assign-dropdown');
+    dd.innerHTML = '';
+    const me = TEAMMATES.find(t => t.isMe);
+    const meItem = document.createElement('div');
+    meItem.className = 'assign-dropdown-item' + (assignedTo === me.id ? ' active' : '');
+    meItem.innerHTML = `
+      <div class="assign-item-avatar" style="background:${me.color};">${me.initials}</div>
+      <div>
+        <div class="assign-item-name">${me.name}</div>
+        <div class="assign-item-you">Assign to me</div>
+      </div>`;
+    meItem.onclick = () => assignTo(me.id);
+    dd.appendChild(meItem);
+
+    const divider = document.createElement('hr');
+    divider.className = 'status-dropdown-divider';
+    dd.appendChild(divider);
+
+    const label = document.createElement('div');
+    label.className = 'status-dropdown-section-label';
+    label.textContent = 'Teammates';
+    dd.appendChild(label);
+
+    TEAMMATES.filter(t => !t.isMe).forEach(t => {
+      const item = document.createElement('div');
+      item.className = 'assign-dropdown-item' + (assignedTo === t.id ? ' active' : '');
+      item.innerHTML = `
+        <div class="assign-item-avatar" style="background:${t.color};">${t.initials}</div>
+        <div class="assign-item-name">${t.name}</div>`;
+      item.onclick = () => assignTo(t.id);
+      dd.appendChild(item);
+    });
+
+    if (assignedTo) {
+      const divider2 = document.createElement('hr');
+      divider2.className = 'status-dropdown-divider';
+      dd.appendChild(divider2);
+      const unassign = document.createElement('div');
+      unassign.className = 'assign-unassign';
+      unassign.textContent = 'Remove assignment';
+      unassign.onclick = () => assignTo(null);
+      dd.appendChild(unassign);
+    }
+  }
+
+  function assignTo(id) {
+    assignedTo = id;
+    document.getElementById('assign-dropdown').style.display = 'none';
+    const avatar = document.getElementById('assigned-avatar');
+    const nameEl = document.getElementById('assigned-name');
+    if (!id) {
+      avatar.style.background = '';
+      avatar.style.color = '#999';
+      avatar.style.border = '1.5px solid #ccc';
+      avatar.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" stroke="#aaa" stroke-width="1.5"/><path d="M3 18c0-4 3-6 7-6s7 2 7 6" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+      nameEl.textContent = 'Unassigned';
+    } else {
+      const person = TEAMMATES.find(t => t.id === id);
+      avatar.style.background = person.color;
+      avatar.style.color = 'white';
+      avatar.style.border = 'none';
+      avatar.textContent = person.initials;
+      nameEl.textContent = person.name;
+    }
+    persistCaseState();
+  }
+
+  function toggleAssignDropdown(e) {
+    e.stopPropagation();
+    buildAssignDropdown();
+    const dd = document.getElementById('assign-dropdown');
+    dd.style.display = dd.style.display === 'none' ? '' : 'none';
+  }
+
+  // Close both dropdowns when clicking outside
+  document.addEventListener('click', function() {
+    document.getElementById('status-dropdown').style.display = 'none';
+    const dd = document.getElementById('assign-dropdown');
+    if (dd) dd.style.display = 'none';
+  });
+  document.getElementById('assign-dropdown').addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+
+  // Mark as visited on load
+  persistCaseState();
+
+  // ── TENDO SUPPORT MODAL ──────────────────────────────────────────────────
+  function openSupportModal() {
+    document.getElementById('modal-form-view').style.display = '';
+    document.getElementById('modal-success-view').style.display = 'none';
+    document.getElementById('support-modal-overlay').classList.add('open');
+  }
+
+  function closeSupportModal() {
+    document.getElementById('support-modal-overlay').classList.remove('open');
+  }
+
+  function sendSupportMessage() {
+    const userText = document.getElementById('support-message').value.trim();
+    document.getElementById('modal-form-view').style.display = 'none';
+    document.getElementById('modal-success-view').style.display = '';
+
+    // Always post the system message announcing Tendo Support was added
+    setTimeout(() => {
+      const now = new Date();
+      const meta = 'System Message, ' + now.toLocaleDateString('en-US', { month:'2-digit', day:'2-digit', year:'2-digit' }) + ' at ' + now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+      appendMessage({
+        type: 'system',
+        meta: meta,
+        html: 'Abigail Brown added Tendo Support to the conversation.'
+      });
+      scrollToBottom();
+
+      if (userText) {
+        setTimeout(() => {
+          appendMessage({
+            type: 'sent',
+            meta: 'Abigail Brown',
+            avatar: 'A',
+            avatarStyle: 'background:#0471EC;color:white;',
+            html: '<p>' + userText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>'
+          });
+          scrollToBottom();
+          setTimeout(() => {
+            const typingEl = showTypingIndicator('T', 'background:#E60B6F;color:white;');
+            scrollToBottom();
+            setTimeout(() => {
+              typingEl.remove();
+              appendMessage({
+                type: 'received',
+                meta: 'Patrick from Tendo Support',
+                avatar: 'T',
+                avatarStyle: 'background:#E60B6F;color:white;',
+                html: '<p>Hi Abigail, this is Patrick from the Tendo Support team. I\'ve joined the conversation and will help resolve your request shortly.</p>'
+              });
+              scrollToBottom();
+            }, 2000);
+          }, 500);
+        }, 600);
+      }
+    }, 400);
+  }
+
+  document.getElementById('support-modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeSupportModal();
+  });
+
+  // If arriving from the inbox ("View Case"), pre-load Emily's reply instantly (no typing animation)
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('from') === 'inbox') {
+      appendMessage(SCRIPT[0]); // Emily: "Yes, that should be fine."
+      scriptIndex = 1;          // skip past it so next Send starts at SCRIPT[1]
+      scrollToBottom();
+    }
+  })();
+</script>
+
+</body>
+</html>
