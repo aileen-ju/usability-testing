@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tendo-navigator-search-results</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gray:        #40403E;
+      --gray-900:    #3A3A3A;
+      --gray-800:    #555554;
+      --gray-600:    #767674;
+      --gray-400:    #D9D9D9;
+      --gray-300:    #ECECEC;
+      --gray-200:    #F3F5F6;
+      --blue:        #0471EC;
+      --blue-light:  #E6F1FE;
+      --navy:        #385062;
+      --white:       #FFFFFF;
+      --shadow:      1px 5px 15px rgba(0,0,0,0.05);
+    }
+
+    body {
+      font-family: Avenir, 'Nunito', 'DM Sans', system-ui, sans-serif;
+      background: #F3F5F6;
+      color: var(--gray-900);
+      font-size: 16px;
+      line-height: 22px;
+    }
+
+    /* ── NAVIGATION ── */
+    .nav-wrapper {
+      background: white;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      width: 100%;
+    }
+
+    .nav-top {
+      background: var(--gray-200);
+      height: 52px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      border-bottom: 1px solid #e8eaec;
+    }
+    .nav-top-inner {
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-employer-network {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray);
+    }
+    .nav-employer-network span { color: var(--gray-600); }
+    .nav-employer-network a { color: var(--blue); text-decoration: none; }
+    .nav-contact {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray);
+      text-decoration: none;
+    }
+    .nav-contact svg { width: 14px; height: 14px; }
+
+    .nav-main {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      background: white;
+    }
+    .nav-main-inner {
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo-group { display: flex; align-items: center; gap: 32px; }
+
+    .tendo-logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      height: 48px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .tendo-logo-care {
+      background: var(--blue);
+      color: white;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      line-height: 1.2;
+      padding: 6px;
+    }
+    .tendo-logo-care span:first-child { font-size: 13px; font-weight: 900; }
+    .tendo-logo-marketplace {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 8px;
+      height: 48px;
+    }
+    .tendo-logo-marketplace .a-tendo { font-size: 8px; color: var(--gray-600); letter-spacing: 0.5px; text-transform: uppercase; }
+    .tendo-logo-marketplace .mktplace { font-size: 13px; font-weight: 700; color: #E60B6F; letter-spacing: 1px; text-transform: uppercase; }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-links a.active { color: var(--blue); font-weight: 700; border-bottom: 2px solid var(--blue); padding-bottom: 4px; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gray-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray);
+    }
+    .nav-icon {
+      cursor: pointer;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .nav-icon svg { width: 20px; height: 20px; }
+
+    /* ── PAGE LAYOUT ── */
+    .page-outer {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* 3-col grid: filters | content | map */
+    .search-layout {
+      display: grid;
+      grid-template-columns: 287px 1fr 376px;
+      gap: 0;
+      align-items: start;
+      padding-top: 32px;
+    }
+
+    /* ── LEFT: FILTERS ── */
+    .filters-col {
+      padding-right: 32px;
+      padding-top: 32px;
+    }
+
+    .filters-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 24px;
+      color: var(--gray-900);
+      margin-bottom: 32px;
+    }
+
+    .filter-section { display: flex; flex-direction: column; gap: 16px; }
+
+    .filter-group-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .filter-group-label {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 24px;
+      color: var(--gray-900);
+    }
+
+    .filter-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-600);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .filter-link.blue { color: var(--blue); }
+    .filter-sep {
+      width: 1px;
+      height: 16px;
+      background: var(--gray-400);
+      display: inline-block;
+    }
+
+    .filter-subgroup {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .filter-subgroup-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-900);
+      line-height: 18px;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .checkbox-item input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin-top: 1px;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+    .checkbox-item-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .checkbox-label {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      color: var(--gray-900);
+    }
+    .checkbox-sublabel {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      color: var(--gray-800);
+    }
+
+    /* ── CENTER: RESULTS ── */
+    .results-col {
+      border-left: 1px solid var(--gray-400);
+      border-right: 1px solid var(--gray-400);
+      padding: 32px 32px 0;
+      min-height: 100vh;
+    }
+
+    /* Results heading */
+    .results-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .results-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 30px;
+      color: var(--gray-900);
+      margin-bottom: 4px;
+    }
+    .results-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      color: var(--gray-900);
+    }
+    .sort-dropdown {
+      flex-shrink: 0;
+      position: relative;
+      height: 40px;
+      width: 199px;
+    }
+    .sort-dropdown select {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      height: 40px;
+      border: 1px solid #909EA7;
+      background: white;
+      padding: 0 40px 0 16px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--navy);
+      cursor: pointer;
+      outline: none;
+    }
+    .sort-dropdown-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--gray);
+    }
+
+    /* Provider cards */
+    .cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .provider-card {
+      background: white;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 40% 26% 34%;
+      position: relative;
+      transition: box-shadow 0.15s, outline 0.1s;
+      outline: 2px solid transparent;
+      outline-offset: -2px;
+    }
+    .provider-card:hover .card-checkbox-wrap { opacity: 1; }
+    .provider-card.selected {
+      outline-color: var(--blue);
+      box-shadow: 0 0 0 2px var(--blue);
+    }
+    .provider-card.selected .card-checkbox-wrap { opacity: 1; }
+
+    /* Card checkbox */
+    .card-checkbox-wrap {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      opacity: 0;
+      transition: opacity 0.12s;
+      z-index: 2;
+    }
+    .card-checkbox-wrap input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+    /* Keep visible when any card is selected (JS adds .selection-active to .cards-list) */
+    .cards-list.selection-active .card-checkbox-wrap { opacity: 1; }
+
+    .card-col {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-col-middle {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .card-col-right {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--gray-400);
+    }
+
+    .card-provider-name {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 24px;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+    .card-provider-specialty,
+    .card-provider-address {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      color: var(--gray-900);
+    }
+
+    .card-rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .card-rating-score {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--gray-900);
+    }
+    .card-stars { display: flex; gap: 4px; }
+    .card-star {
+      color: var(--blue);
+      font-size: 14px;
+      line-height: 1;
+    }
+    .card-star.empty { color: var(--gray-400); }
+    .card-review-count {
+      font-size: 14px;
+      color: var(--gray-800);
+    }
+
+    .card-distance {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      color: var(--gray-900);
+      margin-top: auto;
+      padding-top: 16px;
+    }
+
+    .card-offered-by {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      color: var(--gray-800);
+    }
+    .card-provider-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--gray-300);
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+    .card-provider-logo {
+      margin-top: 16px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      background: var(--gray-300);
+      border-radius: 4px;
+      padding: 0 8px;
+      width: 128px;
+    }
+    .card-provider-logo-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: #2D7A5A;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-procedure-name {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      color: var(--gray-900);
+      margin-bottom: 16px;
+    }
+    .card-price {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 30px;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+    .card-price-medicare {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      color: var(--gray-900);
+    }
+    .card-compare {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-compare-text {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 18px;
+      color: var(--gray-900);
+    }
+    .card-compare-info {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid var(--gray-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--gray-600);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .card-compare-medicare {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      color: var(--gray-900);
+      margin-top: 4px;
+    }
+
+    .card-ctas {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-outline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      border: 1px solid var(--blue);
+      border-radius: 100px;
+      background: white;
+      color: var(--blue);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: inherit;
+      width: 100%;
+    }
+    .btn-outline:hover { background: var(--blue-light); }
+    .btn-filled {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      border: none;
+      border-radius: 100px;
+      background: var(--blue);
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: inherit;
+      width: 100%;
+    }
+    .btn-filled:hover { background: #0359c0; }
+
+    /* ── STICKY ACTION BAR ── */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: var(--navy);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 16px 32px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
+      transform: translateY(100%);
+      transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+    .action-bar.visible { transform: translateY(0); }
+    .action-bar-label {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .action-bar-label strong { font-weight: 800; }
+    .action-bar-msg-btn {
+      height: 40px;
+      padding: 0 24px;
+      border-radius: 100px;
+      background: white;
+      color: var(--blue);
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-bar-msg-btn:hover { background: var(--blue-light); }
+    .action-bar-clear {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: underline;
+    }
+    .action-bar-clear:hover { color: white; }
+
+    /* Modal handled with inline styles (matches tendo-employer-offer-page.html pattern) */
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+      color: var(--gray-900);
+      padding: 16px 0 22px;
+    }
+    .pagination-num {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--gray-900);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .pagination-num:hover { color: var(--blue); }
+    .pagination-num.active {
+      font-weight: 800;
+      color: var(--blue);
+      border-bottom: 2px solid var(--blue);
+    }
+    .pagination-ellipsis { color: var(--gray-600); }
+    .pagination-next {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Section divider */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--gray-400);
+      margin: 0 0 32px;
+    }
+
+    /* Additional Care section */
+    .additional-care {
+      padding-bottom: 56px;
+    }
+    .additional-care-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 24px;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+    .additional-care-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      color: var(--gray);
+      margin-bottom: 32px;
+    }
+    .additional-care-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .care-card {
+      background: white;
+      border: 1px solid var(--gray-400);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .care-card:hover { border-color: var(--blue); }
+    .care-card-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      color: var(--blue);
+    }
+    .care-card-text {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      color: var(--navy);
+    }
+    .care-card-text strong {
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    /* ── RIGHT: MAP ── */
+    .map-col {
+      padding-left: 32px;
+      padding-top: 32px;
+      position: sticky;
+      top: 132px;
+    }
+    .map-placeholder {
+      width: 100%;
+      height: 600px;
+      background: #E4EEF7;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    .map-placeholder-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--gray-600);
+    }
+    .map-placeholder-inner svg { width: 40px; height: 40px; opacity: 0.4; }
+    .map-placeholder-inner span { font-size: 14px; }
+
+    /* Map pin markers */
+    .map-dots {
+      position: absolute;
+      inset: 0;
+    }
+    .map-pin {
+      position: absolute;
+      background: var(--blue);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 12px;
+      white-space: nowrap;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: white;
+      margin-top: 0;
+      border-top: 1px solid var(--gray-400);
+    }
+    .footer-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 32px 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .footer-logos {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-trust-badge {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-600);
+      border: 1px solid var(--gray-400);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .footer-trustpilot {
+      font-size: 14px;
+      color: var(--gray-600);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-trustpilot strong { color: var(--gray-900); }
+    .footer-trustpilot-stars { color: #00B67A; letter-spacing: -2px; font-size: 18px; }
+    .footer-divider { border: none; border-top: 1px solid var(--gray-400); }
+    .footer-bottom { display: flex; gap: 32px; align-items: flex-start; }
+    .footer-logo-brand { flex-shrink: 0; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-link-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-link-row a, .footer-link-row span {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--gray);
+      text-decoration: none;
+    }
+    .footer-sep { width: 2px; height: 2px; background: var(--gray-600); border-radius: 50%; display: inline-block; }
+    .footer-copy { font-size: 14px; color: var(--gray); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav class="nav-wrapper">
+  <div class="nav-top">
+    <div class="nav-top-inner">
+      <div class="nav-employer-network">
+        <span>Example Employer</span>
+        <span style="color:var(--gray-600);padding:0 4px">/</span>
+        <span>Network Name</span>
+        <a href="#" style="margin-left:8px">Change</a>
+      </div>
+      <a href="#" class="nav-contact">
+        Contact Us
+        <svg viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(180deg)">
+          <path d="M1 1L6 6L11 1" stroke="#40403E" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+  <div class="nav-main">
+    <div class="nav-main-inner">
+      <div class="nav-logo-group">
+        <a href="tendo-navigator-home.html" class="tendo-logo">
+          <div class="tendo-logo-care">
+            <span>CARE</span>
+            <span>connect</span>
+          </div>
+          <div class="tendo-logo-marketplace">
+            <span class="a-tendo">A Tendo</span>
+            <span class="mktplace">Marketplace</span>
+          </div>
+        </a>
+        <ul class="nav-links">
+          <li><a href="tendo-cases-navigator.html">Cases</a></li>
+          <li><a href="#">Procedures</a></li>
+          <li><a href="#">Providers</a></li>
+          <li><a href="#">My Orders</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <a href="#" class="nav-icon" title="Cart">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 2H4L5.5 13H15.5L17 6H5" stroke="#40403E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="7.5" cy="16.5" r="1.5" fill="#40403E"/>
+            <circle cx="13.5" cy="16.5" r="1.5" fill="#40403E"/>
+          </svg>
+        </a>
+        <div class="nav-avatar">JD</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ PAGE BODY ═══ -->
+<div class="page-outer">
+  <div class="search-layout">
+
+    <!-- ── LEFT: FILTERS ── -->
+    <aside class="filters-col">
+      <p class="filters-title">Filters</p>
+
+      <div class="filter-section">
+        <div class="filter-group-header">
+          <p class="filter-group-label">Procedure Name</p>
+          <div class="filter-links">
+            <a class="filter-link" href="#">Select All</a>
+            <span class="filter-sep"></span>
+            <a class="filter-link blue" href="#">Clear All</a>
+          </div>
+        </div>
+
+        <div class="filter-subgroup">
+          <!-- Top Matches -->
+          <div>
+            <p class="filter-subgroup-label">Top Matches</p>
+            <div class="filter-options">
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <span class="checkbox-label">Pre-Surgery Lab Screening</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <span class="checkbox-label">New Patient Lab Bundle</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-item-text">
+                  <span class="checkbox-label">CMP (Comprehensive Metabolic Panel)</span>
+                  <span class="checkbox-sublabel">Also Known As: Labs</span>
+                </div>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-item-text">
+                  <span class="checkbox-label">CBC with Auto Diff</span>
+                  <span class="checkbox-sublabel">Also Known As: Lab</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- More Matches -->
+          <div>
+            <p class="filter-subgroup-label">More Matches</p>
+            <div class="filter-options">
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-item-text">
+                  <span class="checkbox-label">BMP (Basic Metabolic Panel)</span>
+                  <span class="checkbox-sublabel">Also Known As: Labs - BMP</span>
+                </div>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-item-text">
+                  <span class="checkbox-label">CBC with Manual Diff</span>
+                  <span class="checkbox-sublabel">Also Known As: CBC Lab</span>
+                </div>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <span class="checkbox-label">Chemistry Labs Level 1</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <span class="checkbox-label">Chemistry Labs Level 2</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <span class="checkbox-label">Chemistry Labs Level 3</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <span class="checkbox-label">Chemistry Labs Level 4</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── CENTER: RESULTS ── -->
+    <main class="results-col">
+      <!-- Results heading -->
+      <div class="results-heading">
+        <div>
+          <p class="results-title">"procedure name" near Omaha, NE</p>
+          <p class="results-subtitle">xx provider results within xx miles</p>
+        </div>
+        <div class="sort-dropdown">
+          <select>
+            <option>Sort by: Distance</option>
+            <option>Sort by: Price (Low to High)</option>
+            <option>Sort by: Price (High to Low)</option>
+            <option>Sort by: Rating</option>
+          </select>
+          <span class="sort-dropdown-icon">
+            <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L6 6L11 1" stroke="#40403E" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Provider Cards -->
+      <div class="cards-list">
+
+        <!-- Card 1 -->
+        <div class="provider-card" data-provider="Example Medical" data-id="1">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Example Medical</p>
+              <p class="card-provider-specialty">Specialty Name</p>
+              <p class="card-provider-address">123 Street Address, City, State 17500</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">4.0</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star empty">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Example Medical</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="provider-card" data-provider="Lakeside Health Center" data-id="2">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Lakeside Health Center</p>
+              <p class="card-provider-specialty">Primary Care</p>
+              <p class="card-provider-address">456 Oak Avenue, Omaha, NE 68102</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">4.5</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Lakeside Health</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="provider-card" data-provider="Riverfront Clinic" data-id="3">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Riverfront Clinic</p>
+              <p class="card-provider-specialty">Internal Medicine</p>
+              <p class="card-provider-address">789 River Road, Omaha, NE 68103</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">3.8</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star empty">★</span>
+                <span class="card-star empty">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Riverfront Clinic</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="provider-card" data-provider="Metro Diagnostic Lab" data-id="4">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Metro Diagnostic Lab</p>
+              <p class="card-provider-specialty">Laboratory Services</p>
+              <p class="card-provider-address">321 Metro Blvd, Omaha, NE 68104</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">4.2</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star empty">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Metro Diagnostic</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="provider-card" data-provider="Westside Medical Group" data-id="5">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Westside Medical Group</p>
+              <p class="card-provider-specialty">Family Medicine</p>
+              <p class="card-provider-address">555 West End Dr, Omaha, NE 68105</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">4.7</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Westside Medical</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="provider-card" data-provider="Heartland Hospital" data-id="6">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Heartland Hospital</p>
+              <p class="card-provider-specialty">Specialty Name</p>
+              <p class="card-provider-address">900 Heartland Way, Omaha, NE 68106</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">4.0</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star empty">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Heartland Hosp.</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="provider-card" data-provider="Northside Care Clinic" data-id="7">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Northside Care Clinic</p>
+              <p class="card-provider-specialty">Specialty Name</p>
+              <p class="card-provider-address">1100 North Park Blvd, Omaha, NE 68107</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">3.5</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star empty">★</span>
+                <span class="card-star empty">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Northside Care</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="provider-card" data-provider="Eastview Medical Plaza" data-id="8">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Eastview Medical Plaza</p>
+              <p class="card-provider-specialty">Specialty Name</p>
+              <p class="card-provider-address">222 Eastview Ct, Omaha, NE 68108</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">4.3</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star empty">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Eastview Medical</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 9 -->
+        <div class="provider-card" data-provider="Summit Health Partners" data-id="9">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Summit Health Partners</p>
+              <p class="card-provider-specialty">Specialty Name</p>
+              <p class="card-provider-address">375 Summit Drive, Omaha, NE 68109</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">4.1</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star empty">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Summit Health</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 10 -->
+        <div class="provider-card" data-provider="Valley View Urgent Care" data-id="10">
+          <div class="card-col">
+            <div>
+              <p class="card-provider-name">Valley View Urgent Care</p>
+              <p class="card-provider-specialty">Urgent Care</p>
+              <p class="card-provider-address">800 Valley View Ln, Omaha, NE 68110</p>
+            </div>
+            <div class="card-rating">
+              <span class="card-rating-score">3.9</span>
+              <div class="card-stars">
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star">★</span>
+                <span class="card-star empty">★</span>
+              </div>
+              <span class="card-review-count">(##)</span>
+            </div>
+            <p class="card-distance">xx.x miles</p>
+          </div>
+          <div class="card-col-middle">
+            <p class="card-offered-by">Offered by</p>
+            <div class="card-provider-avatar"></div>
+            <div class="card-provider-logo">
+              <span class="card-provider-logo-text">Valley View UC</span>
+            </div>
+          </div>
+          <div class="card-col-right">
+            <div style="flex:1">
+              <p class="card-procedure-name">Procedure Name</p>
+              <p class="card-price">$XX</p>
+              <p class="card-price-medicare">XX% of Medicare</p>
+              <div class="card-compare">
+                <span class="card-compare-text">Compare to $XXX</span>
+                <span class="card-compare-info">i</span>
+              </div>
+              <p class="card-compare-medicare">XX% of Medicare</p>
+            </div>
+            <div class="card-ctas">
+              <button class="btn-outline btn-message">Message Provider</button>
+              <button class="btn-filled">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /cards-list -->
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <a class="pagination-num active" href="#">1</a>
+        <a class="pagination-num" href="#">2</a>
+        <a class="pagination-num" href="#">3</a>
+        <span class="pagination-ellipsis">…</span>
+        <a class="pagination-next" href="#">
+          Next
+          <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L5 5L1 9" stroke="#0471EC" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Divider -->
+      <hr class="section-divider">
+
+      <!-- Additional Care -->
+      <div class="additional-care">
+        <p class="additional-care-title">Looking for Additional Care?</p>
+        <p class="additional-care-subtitle">Browse other providers and procedures of varying specialties available in the area.</p>
+        <div class="additional-care-cards">
+          <div class="care-card">
+            <svg class="care-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#0471EC"/>
+            </svg>
+            <p class="care-card-text">See all ## providers in the <strong>placeholder region</strong>.</p>
+          </div>
+          <div class="care-card">
+            <svg class="care-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#0471EC"/>
+            </svg>
+            <p class="care-card-text">See all ### providers in <strong>State</strong></p>
+          </div>
+        </div>
+      </div>
+
+    </main><!-- /results-col -->
+
+    <!-- ── RIGHT: MAP ── -->
+    <aside class="map-col">
+      <div class="map-placeholder">
+        <!-- Simulated map background with road grid lines -->
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;">
+          <rect width="100%" height="100%" fill="#E8EFF6"/>
+          <!-- Road grid -->
+          <line x1="0" y1="20%" x2="100%" y2="20%" stroke="#C8D8E8" stroke-width="2"/>
+          <line x1="0" y1="40%" x2="100%" y2="40%" stroke="#C8D8E8" stroke-width="2"/>
+          <line x1="0" y1="55%" x2="100%" y2="55%" stroke="#C8D8E8" stroke-width="3"/>
+          <line x1="0" y1="70%" x2="100%" y2="70%" stroke="#C8D8E8" stroke-width="2"/>
+          <line x1="0" y1="85%" x2="100%" y2="85%" stroke="#C8D8E8" stroke-width="2"/>
+          <line x1="15%" y1="0" x2="15%" y2="100%" stroke="#C8D8E8" stroke-width="2"/>
+          <line x1="35%" y1="0" x2="35%" y2="100%" stroke="#C8D8E8" stroke-width="3"/>
+          <line x1="55%" y1="0" x2="55%" y2="100%" stroke="#C8D8E8" stroke-width="2"/>
+          <line x1="75%" y1="0" x2="75%" y2="100%" stroke="#C8D8E8" stroke-width="2"/>
+          <line x1="90%" y1="0" x2="90%" y2="100%" stroke="#C8D8E8" stroke-width="2"/>
+          <!-- Park / green area -->
+          <rect x="36%" y="21%" width="18%" height="18%" fill="#C8DCC0" rx="4"/>
+          <!-- Water -->
+          <rect x="76%" y="56%" width="24%" height="28%" fill="#B8D4E8" rx="2"/>
+        </svg>
+        <!-- Map pins -->
+        <div class="map-dots">
+          <div class="map-pin" style="top:28%;left:30%">1</div>
+          <div class="map-pin" style="top:42%;left:52%">2</div>
+          <div class="map-pin" style="top:18%;left:60%">3</div>
+          <div class="map-pin" style="top:60%;left:20%">4</div>
+          <div class="map-pin" style="top:35%;left:72%">5</div>
+          <div class="map-pin" style="top:72%;left:44%">6</div>
+          <div class="map-pin" style="top:50%;left:35%">7</div>
+          <div class="map-pin" style="top:22%;left:18%">8</div>
+          <div class="map-pin" style="top:80%;left:62%">9</div>
+          <div class="map-pin" style="top:65%;left:78%">10</div>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /search-layout -->
+</div><!-- /page-outer -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logos">
+      <div class="footer-trust-badge">Authorize.net</div>
+      <div class="footer-trust-badge">BBB A+ Rating</div>
+      <div class="footer-trust-badge">HIPAA-Compliant</div>
+      <div class="footer-trust-badge">KLAS</div>
+      <div class="footer-trustpilot">
+        See our <strong style="margin:0 4px">70</strong> reviews on
+        <span class="footer-trustpilot-stars">★★★★★</span>
+        <strong>Trustpilot</strong>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <a href="#" class="tendo-logo footer-logo-brand" style="margin-right:24px;text-decoration:none">
+        <div class="tendo-logo-care" style="width:40px;height:40px;font-size:8px">
+          <span style="font-size:11px">CARE</span>
+          <span>connect</span>
+        </div>
+        <div class="tendo-logo-marketplace">
+          <span class="a-tendo">A Tendo</span>
+          <span class="mktplace">Marketplace</span>
+        </div>
+      </a>
+      <div class="footer-links">
+        <div class="footer-link-row">
+          <a href="#">Contact MDsave</a>
+          <span class="footer-sep"></span>
+          <span>(xxx) xxx-xxxx</span>
+        </div>
+        <div class="footer-link-row">
+          <a href="#">Privacy Policy</a>
+          <span class="footer-sep"></span>
+          <a href="#">Terms and Conditions</a>
+          <span class="footer-sep"></span>
+          <a href="#">Security</a>
+          <span class="footer-sep"></span>
+          <a href="#">Patents</a>
+        </div>
+        <p class="footer-copy">© Copyright 2024 MDsave Incorporated. All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ STICKY ACTION BAR ═══ -->
+<div class="action-bar" id="actionBar">
+  <span class="action-bar-label"><strong id="actionBarCount">0</strong> provider<span id="actionBarPlural">s</span> selected</span>
+  <button class="action-bar-msg-btn" id="actionBarMsgBtn">
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 4h14a1 1 0 011 1v9a1 1 0 01-1 1H5l-3 3V5a1 1 0 011-1z" stroke="#0471EC" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    Message Selected
+  </button>
+  <button class="action-bar-clear" id="actionBarClear">Clear selection</button>
+</div>
+
+<!-- ═══ MESSAGE MODAL ═══ -->
+<div id="modalBackdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;overflow-y:auto;padding:40px 0;" onclick="handleModalBackdropClick(event)">
+  <div id="modalBox" style="background:white;width:660px;margin:0 auto;padding:40px;position:relative;border-radius:4px;" onclick="event.stopPropagation()">
+
+    <button onclick="closeModal()" style="position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;color:#40403E;line-height:1;font-family:inherit;">×</button>
+
+    <!-- ── COMPOSE VIEW ── -->
+    <div id="modalForm">
+      <h2 id="modalTitle" style="font-size:24px;font-weight:800;color:#40403E;text-align:center;margin-bottom:8px;">Message Provider Staff</h2>
+      <p style="font-size:14px;color:#3A3A3A;text-align:center;line-height:20px;margin-bottom:20px;">Ask a question directly to the provider staff, and they will get back to you in 24–48 business hours.</p>
+
+      <!-- To: recipient chips -->
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#767674;margin-bottom:6px;">To</p>
+      <div id="modalRecipients" style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;border:1px solid #D9D9D9;border-radius:4px;min-height:44px;margin-bottom:20px;"></div>
+
+      <!-- Your Question -->
+      <label style="display:block;font-size:14px;font-weight:400;color:#40403E;margin-bottom:6px;">Your Question</label>
+      <textarea id="modalQuestion" rows="5" placeholder="Enter your question to the provider staff here..."
+        style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;color:#3A3A3A;resize:vertical;line-height:22px;outline:none;"
+        onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'"></textarea>
+
+      <hr style="border:none;border-top:1px solid #D9D9D9;margin:24px 0;">
+
+      <!-- Patient section heading -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <span id="patientSectionHeading" style="font-size:16px;font-weight:800;color:#40403E;">Select an Existing Patient</span>
+        <span style="font-size:14px;color:#40403E;">or <a href="#" id="togglePatientLink" onclick="toggleNewPatientForm(event)" style="color:#0471EC;font-weight:500;">Create a New Patient Profile</a></span>
+      </div>
+
+      <!-- Select existing patient -->
+      <div id="selectPatientSection">
+        <div style="position:relative;">
+          <div style="display:flex;align-items:center;border:1px solid #D9D9D9;padding:10px 12px;gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="#767674" stroke-width="1.5"/><path d="M14 14L18 18" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <input id="patientSearch" type="text" placeholder="Enter a patient's name or email"
+              style="flex:1;border:none;outline:none;font-size:15px;font-family:inherit;color:#3A3A3A;"
+              oninput="handlePatientSearch(this.value)"
+              onfocus="handlePatientSearchFocus()"
+              autocomplete="off">
+            <button id="patientClear" onclick="clearPatient()" style="display:none;background:none;border:none;cursor:pointer;color:#767674;font-size:18px;line-height:1;padding:0;font-family:inherit;">×</button>
+          </div>
+          <div id="patientDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:white;border:1px solid #D9D9D9;border-top:none;z-index:10;max-height:280px;overflow-y:auto;box-shadow:1px 5px 15px rgba(0,0,0,0.08);">
+            <div id="patientResults"></div>
+            <div style="padding:12px 16px;border-top:1px solid #D9D9D9;">
+              <a href="#" onclick="toggleNewPatientForm(event)" style="color:#0471EC;font-size:14px;font-weight:500;">Create a new patient profile.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Patient Form (hidden by default) -->
+      <div id="newPatientForm" style="display:none;margin-top:20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">Patient First Name</label>
+            <input type="text" style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+          </div>
+          <div>
+            <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">Patient Last Name</label>
+            <input type="text" style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">Gender</label>
+            <input type="text" style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+          </div>
+          <div>
+            <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">Date of Birth</label>
+            <div style="position:relative;">
+              <input type="text" placeholder="mm/dd/yyyy" style="width:100%;border:1px solid #D9D9D9;padding:12px;padding-right:40px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+              <svg style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;" width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="14" rx="1.5" stroke="#767674" stroke-width="1.5"/><path d="M6 2v4M14 2v4M2 9h16" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">Patient Phone</label>
+            <input type="tel" placeholder="(555) 555-5555" style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+          </div>
+          <div>
+            <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">Patient Email</label>
+            <input type="email" style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">Address</label>
+          <input type="text" placeholder="123 Main Street, Apt 4B" style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">State</label>
+            <input type="text" style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+          </div>
+          <div>
+            <label style="display:block;font-size:14px;color:#40403E;margin-bottom:6px;">Zip</label>
+            <input type="text" style="width:100%;border:1px solid #D9D9D9;padding:12px;font-size:15px;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#0471EC'" onblur="this.style.borderColor='#D9D9D9'">
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:28px;">
+        <button onclick="closeModal()" style="background:none;border:none;font-size:16px;font-weight:500;color:#40403E;cursor:pointer;font-family:inherit;">Cancel</button>
+        <button onclick="submitModal()" style="background:#0471EC;color:white;font-size:16px;font-weight:500;border:none;border-radius:100px;padding:14px 32px;cursor:pointer;font-family:inherit;">Send Message &amp; Create Case</button>
+      </div>
+    </div>
+
+    <!-- ── EXISTING CASE VIEW ── -->
+    <div id="modalExistingCase" style="display:none;">
+      <button onclick="showModalForm()" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:#0471EC;font-size:13px;font-family:inherit;padding:0;margin-bottom:24px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#0471EC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <h2 style="font-size:22px;font-weight:800;color:#40403E;margin-bottom:12px;">Existing case found</h2>
+      <p style="font-size:14px;color:#3A3A3A;line-height:22px;margin-bottom:24px;">Sarah Johnson already has an open case. How would you like to proceed?</p>
+      <div style="border:1px solid #e0e0e0;border-radius:6px;padding:16px 20px;margin-bottom:28px;background:#fafafa;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          <div>
+            <div style="font-size:12px;color:#767674;margin-bottom:3px;">Case ID</div>
+            <div style="font-size:14px;font-weight:600;color:#202124;">VH-12345</div>
+          </div>
+          <span style="font-size:12px;font-weight:500;padding:3px 10px;border-radius:4px;border:1.5px solid #0471EC;color:#0471EC;background:#eff6ff;">In Progress</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><div style="font-size:12px;color:#767674;margin-bottom:2px;">Patient</div><div style="font-size:13px;color:#3A3A3A;">Sarah Johnson</div></div>
+          <div><div style="font-size:12px;color:#767674;margin-bottom:2px;">Current Provider</div><div style="font-size:13px;color:#3A3A3A;">Dr. Jakob Kenter</div></div>
+          <div><div style="font-size:12px;color:#767674;margin-bottom:2px;">Procedure</div><div style="font-size:13px;color:#3A3A3A;">Knee Replacement Surgery</div></div>
+          <div><div style="font-size:12px;color:#767674;margin-bottom:2px;">Created</div><div style="font-size:13px;color:#3A3A3A;">04/28/2026</div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <button onclick="submitExistingCase()" style="background:#0471EC;color:white;font-size:15px;font-weight:500;border:none;border-radius:100px;padding:14px 32px;cursor:pointer;font-family:inherit;width:100%;">Add selected provider(s) to existing case</button>
+        <button onclick="submitNewCase()" style="background:white;color:#40403E;font-size:15px;font-weight:500;border:1.5px solid #D9D9D9;border-radius:100px;padding:13px 32px;cursor:pointer;font-family:inherit;width:100%;">Create a new separate case</button>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS VIEW ── -->
+    <div id="modalSuccess" style="display:none;text-align:center;padding:40px 0;">
+      <div style="width:64px;height:64px;border-radius:50%;border:2.5px solid #22C55E;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M7 16L13 22L25 10" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <p style="font-size:16px;color:#3A3A3A;line-height:24px;margin-bottom:28px;">Your request has been submitted. Check your cases page for updates.</p>
+      <button onclick="closeModal()" style="background:#0471EC;color:white;font-size:16px;font-weight:500;border:none;border-radius:100px;padding:14px 48px;cursor:pointer;font-family:inherit;">Okay</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── Patient data (same set as offer page) ──
+  const PATIENTS = [
+    { name: 'Sarah Johnson', email: 'test+user-55555@acme.com', dob: '01/10/1961', phone: '(443) 444-4893' },
+    { name: 'Sarah Kelly',   email: 'test+user-55556@acme.com', dob: '05/08/1953', phone: '(414) 248-1240' },
+    { name: 'Sarah Morrison',email: 'test+user-55557@acme.com', dob: '10/09/1977', phone: '(323) 914-4810' },
+    { name: 'Sarah Stack',   email: 'test+user-55558@acme.com', dob: '06/27/1942', phone: '(914) 433-2824' },
+    { name: 'Sarah Turner',  email: 'test+user-55559@acme.com', dob: '11/18/1973', phone: '(321) 442-1119' },
+  ];
+  let selectedPatient = null;
+
+  const selectedIds = new Set();
+  const cards = document.querySelectorAll('.provider-card');
+  const cardsList = document.querySelector('.cards-list');
+  const actionBar = document.getElementById('actionBar');
+  const actionBarCount = document.getElementById('actionBarCount');
+  const actionBarPlural = document.getElementById('actionBarPlural');
+  const actionBarMsgBtn = document.getElementById('actionBarMsgBtn');
+  const actionBarClear = document.getElementById('actionBarClear');
+
+  // ── Inject checkboxes into every card ──
+  cards.forEach(card => {
+    const wrap = document.createElement('div');
+    wrap.className = 'card-checkbox-wrap';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.setAttribute('aria-label', 'Select ' + card.dataset.provider);
+    wrap.appendChild(cb);
+    card.insertBefore(wrap, card.firstChild);
+
+    cb.addEventListener('change', e => {
+      e.stopPropagation();
+      toggleCard(card, cb.checked);
+    });
+
+    // Clicking the card itself (outside buttons/checkboxes) also toggles selection
+    card.addEventListener('click', e => {
+      if (e.target.closest('.btn-message') || e.target.closest('.btn-filled') || e.target.closest('.card-checkbox-wrap')) return;
+      cb.checked = !cb.checked;
+      toggleCard(card, cb.checked);
+    });
+
+    // "Message Provider" button on each card
+    const msgBtn = card.querySelector('.btn-message');
+    if (msgBtn) {
+      msgBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        // If this card isn't selected, open modal with just this provider.
+        // If it is already selected (and others are too), open with all selected.
+        const openWith = selectedIds.size > 0 && selectedIds.has(card.dataset.id)
+          ? [...selectedIds].map(id => getCardById(id).dataset.provider)
+          : [card.dataset.provider];
+        openModal(openWith);
+      });
+    }
+  });
+
+  function getCardById(id) {
+    return document.querySelector(`.provider-card[data-id="${id}"]`);
+  }
+
+  function toggleCard(card, selected) {
+    if (selected) {
+      selectedIds.add(card.dataset.id);
+      card.classList.add('selected');
+    } else {
+      selectedIds.delete(card.dataset.id);
+      card.classList.remove('selected');
+    }
+    updateActionBar();
+  }
+
+  function updateActionBar() {
+    const count = selectedIds.size;
+    actionBarCount.textContent = count;
+    actionBarPlural.textContent = count === 1 ? '' : 's';
+    if (count > 0) {
+      actionBar.classList.add('visible');
+      cardsList.classList.add('selection-active');
+    } else {
+      actionBar.classList.remove('visible');
+      cardsList.classList.remove('selection-active');
+    }
+    // Update modal title hint
+    if (count > 1) {
+      actionBarMsgBtn.textContent = '';
+      actionBarMsgBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 4h14a1 1 0 011 1v9a1 1 0 01-1 1H5l-3 3V5a1 1 0 011-1z" stroke="#0471EC" stroke-width="1.5" stroke-linejoin="round"/></svg> Message ${count} Providers`;
+    } else {
+      actionBarMsgBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 4h14a1 1 0 011 1v9a1 1 0 01-1 1H5l-3 3V5a1 1 0 011-1z" stroke="#0471EC" stroke-width="1.5" stroke-linejoin="round"/></svg> Message Selected`;
+    }
+  }
+
+  actionBarMsgBtn.addEventListener('click', () => {
+    const names = [...selectedIds].map(id => getCardById(id).dataset.provider);
+    openModal(names);
+  });
+
+  actionBarClear.addEventListener('click', () => {
+    selectedIds.clear();
+    cards.forEach(card => {
+      card.classList.remove('selected');
+      card.querySelector('input[type="checkbox"]').checked = false;
+    });
+    updateActionBar();
+  });
+
+  // ── Modal open / close ──
+  function openModal(providerNames) {
+    resetModal();
+    // Title
+    document.getElementById('modalTitle').textContent = providerNames.length > 1
+      ? `Message ${providerNames.length} Provider Staff`
+      : 'Message Provider Staff';
+    // Render recipient chips
+    const recipientsEl = document.getElementById('modalRecipients');
+    recipientsEl.innerHTML = '';
+    providerNames.forEach(name => {
+      const chip = document.createElement('div');
+      chip.style.cssText = 'display:flex;align-items:center;gap:6px;background:#E6F1FE;border:1px solid #b3d4fb;color:#0471EC;font-size:14px;font-weight:500;padding:3px 8px 3px 10px;border-radius:100px;white-space:nowrap;';
+      chip.dataset.name = name;
+      chip.innerHTML = `<span>${name}</span><button onclick="removeRecipientChip(this)" style="background:none;border:none;cursor:pointer;color:#0471EC;font-size:16px;line-height:1;padding:0;font-family:inherit;" title="Remove">×</button>`;
+      recipientsEl.appendChild(chip);
+    });
+    document.getElementById('modalBackdrop').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('modalQuestion').focus(), 50);
+  }
+
+  function removeRecipientChip(btn) {
+    const chip = btn.parentElement;
+    chip.remove();
+    if (document.getElementById('modalRecipients').children.length === 0) closeModal();
+  }
+
+  function closeModal() {
+    document.getElementById('modalBackdrop').style.display = 'none';
+    document.body.style.overflow = '';
+    // Deselect all cards after a successful interaction
+    selectedIds.clear();
+    cards.forEach(card => {
+      card.classList.remove('selected');
+      const cb = card.querySelector('input[type="checkbox"]');
+      if (cb) cb.checked = false;
+    });
+    updateActionBar();
+  }
+
+  function handleModalBackdropClick(e) {
+    if (e.target === document.getElementById('modalBackdrop')) closeModal();
+  }
+
+  function resetModal() {
+    document.getElementById('modalForm').style.display = 'block';
+    document.getElementById('modalExistingCase').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'none';
+    document.getElementById('modalQuestion').value = '';
+    document.getElementById('patientSearch').value = '';
+    document.getElementById('patientClear').style.display = 'none';
+    document.getElementById('patientDropdown').style.display = 'none';
+    document.getElementById('newPatientForm').style.display = 'none';
+    document.getElementById('selectPatientSection').style.display = '';
+    document.getElementById('patientSectionHeading').textContent = 'Select an Existing Patient';
+    document.getElementById('togglePatientLink').textContent = 'Create a New Patient Profile';
+    selectedPatient = null;
+  }
+
+  function showModalForm() {
+    document.getElementById('modalForm').style.display = 'block';
+    document.getElementById('modalExistingCase').style.display = 'none';
+  }
+
+  // ── Patient search ──
+  function handlePatientSearch(val) {
+    const dropdown = document.getElementById('patientDropdown');
+    const results  = document.getElementById('patientResults');
+    const clear    = document.getElementById('patientClear');
+    selectedPatient = null;
+    clear.style.display = val.length ? 'block' : 'none';
+    if (!val.trim()) { dropdown.style.display = 'none'; return; }
+    const matches = PATIENTS.filter(p =>
+      p.name.toLowerCase().includes(val.toLowerCase()) ||
+      p.email.toLowerCase().includes(val.toLowerCase())
+    );
+    results.innerHTML = matches.map(p => `
+      <div style="padding:12px 16px;cursor:pointer;border-bottom:1px solid #F5F5F5;"
+        onmouseover="this.style.background='#F5F5F5'" onmouseout="this.style.background='white'"
+        onclick="selectPatientObj(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+        <p style="font-size:15px;color:#3A3A3A;line-height:20px;"><strong>${highlightMatch(p.name, val)}</strong></p>
+        <p style="font-size:13px;color:#767674;line-height:18px;">${p.email}</p>
+        <p style="font-size:13px;color:#767674;line-height:18px;">${p.dob} &nbsp;·&nbsp; ${p.phone}</p>
+      </div>
+    `).join('');
+    dropdown.style.display = 'block';
+  }
+
+  function highlightMatch(text, query) {
+    const idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return text;
+    return text.slice(0, idx) + '<span style="font-weight:900">' + text.slice(idx, idx + query.length) + '</span>' + text.slice(idx + query.length);
+  }
+
+  function handlePatientSearchFocus() {
+    const val = document.getElementById('patientSearch').value;
+    if (val.trim()) handlePatientSearch(val);
+  }
+
+  function selectPatientObj(p) {
+    selectedPatient = p;
+    document.getElementById('patientSearch').value = p.name;
+    document.getElementById('patientClear').style.display = 'block';
+    document.getElementById('patientDropdown').style.display = 'none';
+    document.getElementById('newPatientForm').style.display = 'none';
+  }
+
+  function clearPatient() {
+    selectedPatient = null;
+    document.getElementById('patientSearch').value = '';
+    document.getElementById('patientClear').style.display = 'none';
+    document.getElementById('patientDropdown').style.display = 'none';
+    document.getElementById('patientSearch').focus();
+  }
+
+  function toggleNewPatientForm(e) {
+    e.preventDefault();
+    const form          = document.getElementById('newPatientForm');
+    const selectSection = document.getElementById('selectPatientSection');
+    const heading       = document.getElementById('patientSectionHeading');
+    const link          = document.getElementById('togglePatientLink');
+    const isCreating    = form.style.display !== 'none';
+    if (isCreating) {
+      form.style.display          = 'none';
+      selectSection.style.display = '';
+      heading.textContent         = 'Select an Existing Patient';
+      link.textContent            = 'Create a New Patient Profile';
+    } else {
+      form.style.display          = 'block';
+      selectSection.style.display = 'none';
+      heading.textContent         = 'Create a New Patient Profile';
+      link.textContent            = 'Select an Existing Patient';
+      document.getElementById('patientDropdown').style.display = 'none';
+      document.getElementById('patientSearch').value = '';
+      document.getElementById('patientClear').style.display = 'none';
+      selectedPatient = null;
+    }
+  }
+
+  // ── Submit ──
+  function submitModal() {
+    if (selectedPatient && selectedPatient.name === 'Sarah Johnson') {
+      document.getElementById('modalForm').style.display = 'none';
+      document.getElementById('modalExistingCase').style.display = 'block';
+      document.getElementById('modalBackdrop').scrollTop = 0;
+      return;
+    }
+    document.getElementById('modalForm').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'block';
+    document.getElementById('modalBackdrop').scrollTop = 0;
+  }
+
+  function submitExistingCase() {
+    document.getElementById('modalExistingCase').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'block';
+    document.getElementById('modalBackdrop').scrollTop = 0;
+  }
+
+  function submitNewCase() {
+    document.getElementById('modalExistingCase').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'block';
+    document.getElementById('modalBackdrop').scrollTop = 0;
+  }
+
+  // Close patient dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('patientDropdown');
+    const search   = document.getElementById('patientSearch');
+    if (dropdown && !dropdown.contains(e.target) && e.target !== search) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  // Escape closes modal
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('modalBackdrop').style.display !== 'none') closeModal();
+  });
+</script>
+
+</body>
+</html>

@@ -231,6 +231,69 @@
     .chat-thread { flex: 1; min-height: 0; padding: 24px; overflow-y: auto; display: none; flex-direction: column; }
     .chat-thread.active { display: flex; }
 
+    /* AI Assistant tab */
+    .provider-tab-btn.ai-tab .provider-tab-facility { color: #6D28D9; }
+    .provider-tab-btn.ai-tab:hover .provider-tab-facility { color: #5B21B6; }
+    .provider-tab-btn.ai-tab.active { border-bottom-color: #6D28D9; }
+    .provider-tab-btn.ai-tab.active .provider-tab-facility { color: #6D28D9; }
+
+    /* AI chat thread */
+    #chat-thread-3 { background: #FAFAF9; gap: 0; padding: 0; display: none; flex-direction: column; }
+    #chat-thread-3.active { display: flex; }
+
+    .ai-messages-area { flex: 1; min-height: 0; overflow-y: auto; padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* AI welcome state */
+    .ai-welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 12px; padding: 32px; text-align: center; }
+    .ai-welcome-icon { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #7C3AED, #A855F7); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .ai-welcome-title { font-size: 16px; font-weight: 700; color: #202124; }
+    .ai-welcome-sub { font-size: 13px; color: #767674; line-height: 20px; max-width: 340px; }
+
+    /* Suggestion chips */
+    .ai-suggestions { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; width: 100%; max-width: 480px; }
+    .ai-suggestion-chip { background: white; border: 1px solid #DDD6FE; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #5B21B6; cursor: pointer; text-align: left; font-family: inherit; line-height: 18px; transition: background 0.12s, border-color 0.12s; }
+    .ai-suggestion-chip:hover { background: #F5F3FF; border-color: #7C3AED; }
+
+    /* AI chat bubbles */
+    .ai-msg-user { display: flex; justify-content: flex-end; }
+    .ai-msg-user-bubble { background: #0471EC; color: white; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13px; line-height: 20px; max-width: 70%; }
+
+    .ai-msg-ai { display: flex; gap: 10px; align-items: flex-start; }
+    .ai-avatar-small { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #7C3AED, #A855F7); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 2px; }
+    .ai-msg-ai-body { background: white; border: 1px solid #E5E7EB; border-radius: 4px 16px 16px 16px; padding: 12px 14px; font-size: 13px; line-height: 20px; color: #202124; max-width: 85%; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .ai-msg-ai-body p { margin-bottom: 6px; }
+    .ai-msg-ai-body p:last-child { margin-bottom: 0; }
+
+    /* AI typing indicator */
+    .ai-typing { display: flex; gap: 4px; align-items: center; padding: 4px 2px; }
+    .ai-typing span { width: 7px; height: 7px; border-radius: 50%; background: #A78BFA; display: inline-block; animation: aiTypeBounce 1.2s infinite ease-in-out; }
+    .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes aiTypeBounce { 0%,80%,100%{transform:scale(0.8);opacity:0.5} 40%{transform:scale(1.2);opacity:1} }
+
+    /* AI summary table */
+    .ai-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0; }
+    .ai-table th { background: #F5F3FF; color: #5B21B6; font-weight: 700; padding: 7px 10px; text-align: left; border-bottom: 2px solid #DDD6FE; white-space: nowrap; }
+    .ai-table td { padding: 7px 10px; border-bottom: 1px solid #F3F4F6; color: #374151; vertical-align: top; }
+    .ai-table tr:last-child td { border-bottom: none; }
+    .ai-table tr:hover td { background: #FAFAF9; }
+
+    /* AI draft block */
+    .ai-draft-block { background: #F8F7FF; border: 1px solid #DDD6FE; border-radius: 8px; padding: 12px 14px; margin-top: 10px; }
+    .ai-draft-label { font-size: 11px; font-weight: 700; color: #7C3AED; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .ai-draft-text { font-size: 12px; color: #374151; line-height: 18px; white-space: pre-wrap; }
+    .ai-draft-send-btn { margin-top: 10px; background: #6D28D9; color: white; border: none; border-radius: 100px; padding: 6px 16px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .ai-draft-send-btn:hover { background: #5B21B6; }
+    .ai-draft-send-btn.sent { background: #22C55E; cursor: default; }
+
+    /* AI composer bar */
+    .ai-composer { display: flex; align-items: center; gap: 8px; padding: 14px 16px; border-top: 1px solid #E5E7EB; background: white; flex-shrink: 0; }
+    .ai-composer-input { flex: 1; border: 1px solid #DDD6FE; border-radius: 8px; padding: 9px 14px; font-size: 13px; font-family: inherit; outline: none; color: #202124; background: #FAFAF9; }
+    .ai-composer-input:focus { border-color: #7C3AED; background: white; }
+    .ai-composer-input::placeholder { color: #9CA3AF; }
+    .ai-composer-send { background: #6D28D9; color: white; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .ai-composer-send:hover { background: #5B21B6; }
+
     /* Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
@@ -338,7 +401,7 @@
           <div class="nav-avatar">AB</div>
           <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1L6 6L11 1" stroke="#40403E" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
-        <a href="tendo-employer-offer-page.html" class="nav-icon">
+        <a href="tendo-navigator-search-results.html" class="nav-icon">
           <svg viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="#40403E" stroke-width="1.5"/><path d="M14 14L18 18" stroke="#40403E" stroke-width="1.5" stroke-linecap="round"/></svg>
         </a>
         <div class="nav-icon">
@@ -385,6 +448,14 @@
             <span class="provider-tab-doctor">Dr. Michael Torres</span>
           </div>
           <span class="tab-status-badge tab-status-pending">Awaiting Response</span>
+        </button>
+        <button class="provider-tab-btn ai-tab" onclick="switchProvider(3, this)">
+          <div>
+            <span class="provider-tab-facility" style="display:flex;align-items:center;gap:5px;">
+              <span style="font-size:14px;line-height:1;">✦</span> AI Assistant
+            </span>
+            <span class="provider-tab-doctor">Case intelligence</span>
+          </div>
         </button>
       </div>
     </div>
@@ -549,10 +620,31 @@
           </div>
         </div>
 
-        <div class="support-bar">
+        <!-- Thread 3: AI Assistant -->
+        <div class="chat-thread" id="chat-thread-3">
+          <div class="ai-messages-area" id="ai-messages-area">
+            <!-- Welcome state (hidden once chat starts) -->
+            <div class="ai-welcome" id="ai-welcome">
+              <div class="ai-welcome-icon">✦</div>
+              <p class="ai-welcome-title">AI Assistant</p>
+              <p class="ai-welcome-sub">Ask me anything about this case — I can summarize providers, draft messages, and help you take action.</p>
+              <div class="ai-suggestions" id="ai-suggestions">
+                <button class="ai-suggestion-chip" onclick="fireAiPrompt('Create a summary table of these providers outlining provider, group, price, savings rate, distance, and rating')">📊 Summarize these providers in a comparison table</button>
+                <button class="ai-suggestion-chip" onclick="fireAiPrompt('Ask Goshen about their availability')">📅 Ask Goshen Hospital about their availability</button>
+                <button class="ai-suggestion-chip" onclick="fireAiPrompt('I want to move forward with Goshen. Draft a message to move that along. Also draft messages to close out the Valley and St. Mary\'s conversations.')">✉️ Move forward with Goshen — draft all messages</button>
+              </div>
+            </div>
+          </div>
+          <div class="ai-composer">
+            <input class="ai-composer-input" id="ai-input" type="text" placeholder="Ask the AI something about this case…" onkeydown="if(event.key==='Enter')sendAiMessage()">
+            <button class="ai-composer-send" onclick="sendAiMessage()">Ask</button>
+          </div>
+        </div>
+
+        <div class="support-bar" id="support-bar">
           Request Tendo Support at any time to bring a Tendo team member into the conversation. <a href="#" onclick="openSupportModal(); return false;">Request Tendo support.</a>
         </div>
-        <div class="chat-composer">
+        <div class="chat-composer" id="chat-composer">
           <div class="composer-attach" onclick="document.getElementById('file-input').click()" title="Attach file">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16 9l-6 6a4 4 0 01-5.66-5.66l6-6a2.5 2.5 0 013.54 3.54l-6 6a1 1 0 01-1.42-1.42l5.3-5.29" stroke="#767674" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
@@ -618,15 +710,22 @@
       t.classList.toggle('active', i === idx);
     });
 
-    // Update sidebar fields
-    var d = THREAD_DATA[idx];
-    document.getElementById('sb-case-id').textContent = d.caseId;
-    document.getElementById('sb-provider').textContent = d.provider;
-    document.getElementById('sb-facility').textContent = d.facility;
-    document.getElementById('sb-date-created').textContent = d.dateCreated;
-    var badge = document.getElementById('case-status-badge');
-    badge.className = 'status-badge ' + d.statusClass;
-    document.getElementById('status-text').textContent = d.statusLabel;
+    // Show/hide the regular support bar + composer (hidden for AI tab)
+    var isAI = idx === 3;
+    document.getElementById('support-bar').style.display  = isAI ? 'none' : '';
+    document.getElementById('chat-composer').style.display = isAI ? 'none' : '';
+
+    // Update sidebar fields (skip for AI tab)
+    if (!isAI) {
+      var d = THREAD_DATA[idx];
+      document.getElementById('sb-case-id').textContent = d.caseId;
+      document.getElementById('sb-provider').textContent = d.provider;
+      document.getElementById('sb-facility').textContent = d.facility;
+      document.getElementById('sb-date-created').textContent = d.dateCreated;
+      var badge = document.getElementById('case-status-badge');
+      badge.className = 'status-badge ' + d.statusClass;
+      document.getElementById('status-text').textContent = d.statusLabel;
+    }
 
     activeThreadIdx = idx;
   }
@@ -1201,6 +1300,148 @@
       scrollToBottom();
     }
   })();
+
+  // ══════════════════════════════════════════
+  // AI ASSISTANT
+  // ══════════════════════════════════════════
+
+  var aiChatStarted = false;
+
+  function sendAiMessage() {
+    var input = document.getElementById('ai-input');
+    var text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    fireAiPrompt(text);
+  }
+
+  function fireAiPrompt(text) {
+    startAiChat();
+    appendAiUserBubble(text);
+    showAiTyping(function() {
+      var response = getAiResponse(text);
+      appendAiResponse(response);
+    });
+  }
+
+  function startAiChat() {
+    if (aiChatStarted) return;
+    aiChatStarted = true;
+    var welcome = document.getElementById('ai-welcome');
+    if (welcome) welcome.style.display = 'none';
+  }
+
+  function appendAiUserBubble(text) {
+    var area = document.getElementById('ai-messages-area');
+    var row = document.createElement('div');
+    row.className = 'ai-msg-user';
+    row.innerHTML = '<div class="ai-msg-user-bubble">' + escHtml(text) + '</div>';
+    area.appendChild(row);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function showAiTyping(callback) {
+    var area = document.getElementById('ai-messages-area');
+    var row = document.createElement('div');
+    row.className = 'ai-msg-ai';
+    row.id = 'ai-typing-row';
+    row.innerHTML = '<div class="ai-avatar-small">✦</div><div class="ai-msg-ai-body"><div class="ai-typing"><span></span><span></span><span></span></div></div>';
+    area.appendChild(row);
+    area.scrollTop = area.scrollHeight;
+    setTimeout(function() {
+      var typingRow = document.getElementById('ai-typing-row');
+      if (typingRow) typingRow.remove();
+      callback();
+    }, 1400);
+  }
+
+  function appendAiResponse(html) {
+    var area = document.getElementById('ai-messages-area');
+    var row = document.createElement('div');
+    row.className = 'ai-msg-ai';
+    row.innerHTML = '<div class="ai-avatar-small">✦</div><div class="ai-msg-ai-body">' + html + '</div>';
+    area.appendChild(row);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function getAiResponse(prompt) {
+    var p = prompt.toLowerCase();
+
+    // ── Summary table ──
+    if (p.includes('summary') || p.includes('table') || p.includes('summarize') || p.includes('compare') || p.includes('comparison')) {
+      return '<p>Here\'s a comparison of the three providers currently in this case:</p>' +
+        '<table class="ai-table">' +
+          '<thead><tr>' +
+            '<th>Provider</th><th>Group / Facility</th><th>Price</th><th>Savings</th><th>Distance</th><th>Rating</th>' +
+          '</tr></thead>' +
+          '<tbody>' +
+            '<tr><td><strong>Dr. Jakob Kenter</strong></td><td>Goshen Hospital</td><td>$24,800</td><td>31% vs. Medicare</td><td>4.2 mi</td><td>⭐ 4.5 (62)</td></tr>' +
+            '<tr><td><strong>Dr. Sarah Chen</strong></td><td>Valley Orthopedic</td><td>$28,400</td><td>19% vs. Medicare</td><td>7.1 mi</td><td>⭐ 4.3 (38)</td></tr>' +
+            '<tr><td><strong>Dr. Michael Torres</strong></td><td>St. Mary\'s Hospital</td><td>$22,100</td><td>37% vs. Medicare</td><td>11.8 mi</td><td>⭐ 3.9 (21)</td></tr>' +
+          '</tbody>' +
+        '</table>' +
+        '<p style="margin-top:8px;font-size:12px;color:#767674;">St. Mary\'s offers the highest savings rate. Goshen is closest and has the highest rating.</p>';
+    }
+
+    // ── Ask Goshen about availability ──
+    if (p.includes('availability') || p.includes('goshen') && p.includes('ask')) {
+      return '<p>Here\'s a draft message to Goshen Hospital asking about availability:</p>' +
+        '<div class="ai-draft-block">' +
+          '<div class="ai-draft-label">Draft — Goshen Hospital</div>' +
+          '<div class="ai-draft-text" id="ai-draft-goshen-avail">Hi Emily,\n\nWe are following up on the case for Sarah Johnson (knee replacement surgery, outpatient). Could you please share Dr. Kenter\'s next available appointment dates so we can coordinate scheduling for the patient?\n\nThank you,\nAbigail Brown</div>' +
+          '<button class="ai-draft-send-btn" onclick="sendDraftToThread(0, \'ai-draft-goshen-avail\', this)">Send to Goshen Hospital →</button>' +
+        '</div>';
+    }
+
+    // ── Move forward / draft close-out messages ──
+    if (p.includes('move forward') || p.includes('close out') || p.includes('draft') && (p.includes('valley') || p.includes('mary'))) {
+      return '<p>Here are three drafted messages — one to proceed with Goshen, and two to close out Valley Orthopedic and St. Mary\'s:</p>' +
+        '<div class="ai-draft-block">' +
+          '<div class="ai-draft-label">Draft — Goshen Hospital · Proceed</div>' +
+          '<div class="ai-draft-text" id="ai-draft-goshen-fwd">Hi Emily,\n\nGreat news — we would like to move forward with Goshen Hospital for Sarah Johnson\'s knee replacement surgery. Please let us know the next steps and available appointment dates.\n\nThank you,\nAbigail Brown</div>' +
+          '<button class="ai-draft-send-btn" onclick="sendDraftToThread(0, \'ai-draft-goshen-fwd\', this)">Send to Goshen Hospital →</button>' +
+        '</div>' +
+        '<div class="ai-draft-block">' +
+          '<div class="ai-draft-label">Draft — Valley Orthopedic · Close out</div>' +
+          '<div class="ai-draft-text" id="ai-draft-valley-close">Hi Dr. Chen\'s office,\n\nThank you for your time regarding Sarah Johnson\'s case. We have decided to move forward with another provider at this time. We appreciate your responsiveness and will keep you in mind for future cases.\n\nBest regards,\nAbigail Brown</div>' +
+          '<button class="ai-draft-send-btn" onclick="sendDraftToThread(1, \'ai-draft-valley-close\', this)">Send to Valley Orthopedic →</button>' +
+        '</div>' +
+        '<div class="ai-draft-block">' +
+          '<div class="ai-draft-label">Draft — St. Mary\'s Hospital · Close out</div>' +
+          '<div class="ai-draft-text" id="ai-draft-marys-close">Hi Dr. Torres\'s office,\n\nThank you for your time regarding Sarah Johnson\'s case. We have decided to move forward with another provider at this time. We appreciate your willingness to assist and will keep you in mind for future cases.\n\nBest regards,\nAbigail Brown</div>' +
+          '<button class="ai-draft-send-btn" onclick="sendDraftToThread(2, \'ai-draft-marys-close\', this)">Send to St. Mary\'s Hospital →</button>' +
+        '</div>';
+    }
+
+    // ── Generic fallback ──
+    return '<p>I can help with this case. Try asking me to:</p>' +
+      '<ul style="margin:6px 0 0 16px;font-size:13px;line-height:22px;">' +
+        '<li>Create a summary table of the providers</li>' +
+        '<li>Ask Goshen about their availability</li>' +
+        '<li>Draft messages to move forward or close out conversations</li>' +
+      '</ul>';
+  }
+
+  function sendDraftToThread(threadIdx, draftElementId, btn) {
+    var draftText = document.getElementById(draftElementId).textContent;
+    // Switch to the target provider tab
+    var tabBtns = document.querySelectorAll('.provider-tab-btn');
+    switchProvider(threadIdx, tabBtns[threadIdx]);
+    // Pre-fill the composer
+    var composerInput = document.getElementById('composer-input');
+    if (composerInput) {
+      composerInput.value = draftText;
+      composerInput.focus();
+    }
+    // Mark button as sent
+    btn.textContent = '✓ Populated in thread';
+    btn.classList.add('sent');
+    btn.disabled = true;
+  }
 </script>
 
 </body>
